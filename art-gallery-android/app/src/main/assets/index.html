@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>گالری آثار من</title>
+<style>
+:root{--bg:#f4f3ef;--card:#fff;--txt:#171717;--muted:#757575;--line:#e6e3dc;--accent:#171717}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:Tahoma,system-ui,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#f4f3eff2;border-bottom:1px solid var(--line);padding:14px 16px}
+.wrap{max-width:900px;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+h1{font-size:20px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}
+button{border:0;border-radius:13px;padding:11px 14px;font:inherit;font-weight:700}.primary{background:var(--accent);color:white}.soft{background:#ebe9e3;color:#222}
+main{padding:16px}.tools{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px}
+input,textarea,select{width:100%;border:1px solid var(--line);border-radius:13px;background:#fff;padding:12px;font:inherit;outline:none}
+.filters{display:flex;gap:7px;overflow:auto;padding:2px 0 10px}.chip{white-space:nowrap;background:white;border:1px solid var(--line);padding:8px 11px;border-radius:999px}.chip.on{background:#171717;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.pic{aspect-ratio:1/1;background:#e9e7e1;display:grid;place-items:center;overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover}.body{padding:11px}
+.title{font-weight:800}.meta{color:var(--muted);font-size:12px;margin-top:4px}.desc{font-size:13px;line-height:1.65;margin-top:7px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.price{font-weight:800;margin-top:7px}.actions{display:flex;gap:6px;margin-top:9px}.actions button{flex:1;padding:8px;background:#efede8}
+.empty{text-align:center;color:var(--muted);padding:48px 16px;background:#fff;border:1px dashed #cbc7bd;border-radius:18px}
+.modal{position:fixed;inset:0;background:#0007;display:none;align-items:flex-end;z-index:20}.modal.show{display:flex}.sheet{width:100%;max-height:93vh;overflow:auto;background:#faf9f6;border-radius:24px 24px 0 0;padding:17px}
+.form{display:grid;gap:10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.picker{border:1px dashed #aaa59a;background:#fff;border-radius:15px;padding:15px;text-align:center}
+#preview{display:none;width:100%;max-height:250px;object-fit:contain;border-radius:12px;margin-top:10px}.foot{display:flex;gap:8px}.foot button{flex:1}
+@media(min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}.modal{align-items:center;justify-content:center}.sheet{max-width:640px;border-radius:24px}}
+</style>
+</head>
+<body>
+<header><div class="wrap top"><div><h1>گالری آثار من</h1><div class="sub">آثار هنری‌ات را روی گوشی نگه دار</div></div><button class="primary" id="add">+ افزودن اثر</button></div></header>
+<main class="wrap">
+<div class="tools"><input id="search" placeholder="جستجو در آثار…"><select id="sort"><option value="new">جدیدترین</option><option value="old">قدیمی‌ترین</option><option value="title">عنوان</option></select></div>
+<div class="filters" id="filters"></div>
+<div class="grid" id="grid"></div>
+<div class="empty" id="empty" hidden>هنوز اثری اضافه نکرده‌ای.<br><small>روی «افزودن اثر» بزن.</small></div>
+</main>
+<div class="modal" id="modal"><div class="sheet">
+<h2 id="mt">افزودن اثر</h2>
+<form id="form" class="form">
+<div class="picker"><label class="soft" style="display:inline-block;padding:10px 13px;border-radius:12px" for="image">انتخاب عکس از دوربین یا گالری</label><input hidden type="file" id="image" accept="image/*"><img id="preview"></div>
+<input required id="title" placeholder="عنوان اثر">
+<div class="row"><input id="category" placeholder="دسته‌بندی، مثلا نقاشی"><input id="year" inputmode="numeric" placeholder="سال"></div>
+<textarea id="description" rows="4" placeholder="توضیح کوتاه درباره اثر"></textarea>
+<div class="row"><input id="price" inputmode="decimal" placeholder="قیمت اختیاری"><select id="currency"><option>€</option><option>$</option><option>تومان</option></select></div>
+<div class="foot"><button type="button" class="soft" id="cancel">انصراف</button><button class="primary" type="submit">ذخیره</button></div>
+</form>
+</div></div>
+<script>
+const KEY='art-gallery-apk-v1';
+let works=[];try{works=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){}
+let editing=null,imageData='',selected='همه';
+const $=s=>document.querySelector(s),grid=$('#grid'),empty=$('#empty'),modal=$('#modal'),form=$('#form');
+const id=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function save(){localStorage.setItem(KEY,JSON.stringify(works));render()}
+function cats(){return ['همه',...new Set(works.map(x=>x.category).filter(Boolean))]}
+function renderFilters(){const f=$('#filters');f.innerHTML='';cats().forEach(c=>{const b=document.createElement('button');b.className='chip'+(c===selected?' on':'');b.textContent=c;b.onclick=()=>{selected=c;render()};f.appendChild(b)})}
+function list(){let a=[...works],q=$('#search').value.trim().toLowerCase();if(q)a=a.filter(w=>(w.title+' '+w.description+' '+w.category).toLowerCase().includes(q));if(selected!=='همه')a=a.filter(w=>w.category===selected);const s=$('#sort').value;if(s==='new')a.sort((a,b)=>b.created-a.created);if(s==='old')a.sort((a,b)=>a.created-b.created);if(s==='title')a.sort((a,b)=>a.title.localeCompare(b.title,'fa'));return a}
+function render(){renderFilters();const a=list();grid.innerHTML='';empty.hidden=!!a.length;a.forEach(w=>{const c=document.createElement('article');c.className='card';c.innerHTML='<div class="pic">'+(w.image?'<img src="'+w.image+'">':'🎨')+'</div><div class="body"><div class="title">'+esc(w.title)+'</div><div class="meta">'+esc(w.category||'بدون دسته')+(w.year?' • '+esc(w.year):'')+'</div>'+(w.description?'<div class="desc">'+esc(w.description)+'</div>':'')+(w.price?'<div class="price">'+esc(w.price)+' '+esc(w.currency)+'</div>':'')+'<div class="actions"><button data-e="'+w.id+'">ویرایش</button><button data-d="'+w.id+'">حذف</button></div></div>';grid.appendChild(c)});grid.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>openEdit(b.dataset.e));grid.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>remove(b.dataset.d))}
+function reset(){form.reset();editing=null;imageData='';$('#preview').style.display='none';$('#preview').src='';$('#mt').textContent='افزودن اثر'}
+function openNew(){reset();modal.classList.add('show')}
+function openEdit(x){const w=works.find(v=>v.id===x);if(!w)return;editing=x;imageData=w.image||'';$('#mt').textContent='ویرایش اثر';$('#title').value=w.title;$('#category').value=w.category||'';$('#year').value=w.year||'';$('#description').value=w.description||'';$('#price').value=w.price||'';$('#currency').value=w.currency||'€';if(imageData){$('#preview').src=imageData;$('#preview').style.display='block'}modal.classList.add('show')}
+function remove(x){if(confirm('این اثر حذف شود؟')){works=works.filter(v=>v.id!==x);save()}}
+async function imageToData(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const max=1600,scale=Math.min(1,max/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*scale);cv.height=Math.round(im.height*scale);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);resolve(cv.toDataURL('image/jpeg',0.82))};im.onerror=reject;im.src=r.result};r.onerror=reject;r.readAsDataURL(file)})}
+$('#image').onchange=async e=>{const f=e.target.files&&e.target.files[0];if(!f)return;try{imageData=await imageToData(f);$('#preview').src=imageData;$('#preview').style.display='block'}catch(err){alert('خواندن عکس انجام نشد.')}};
+form.onsubmit=e=>{e.preventDefault();const old=works.find(x=>x.id===editing);const w={id:editing||id(),title:$('#title').value.trim(),category:$('#category').value.trim(),year:$('#year').value.trim(),description:$('#description').value.trim(),price:$('#price').value.trim(),currency:$('#currency').value,image:imageData,created:old?.created||Date.now()};if(editing)works=works.map(x=>x.id===editing?w:x);else works.push(w);try{save()}catch(err){alert('حافظه برنامه پر شده؛ عکس کوچک‌تری انتخاب کن.');return}modal.classList.remove('show');reset()};
+$('#add').onclick=openNew;$('#cancel').onclick=()=>modal.classList.remove('show');modal.onclick=e=>{if(e.target===modal)modal.classList.remove('show')};$('#search').oninput=render;$('#sort').onchange=render;render();
+</script>
+</body></html>
