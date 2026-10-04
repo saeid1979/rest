@@ -126,6 +126,21 @@ input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 
 .viewerTitle{font-family:Georgia,serif;color:var(--lapis);font-size:23px;margin:12px 0 5px}.viewerMeta{font-size:12px;color:var(--muted)}.viewerDesc{line-height:1.9;font-size:13px;text-align:start;margin-top:10px;white-space:pre-wrap}
 .profileGrid{display:grid;gap:9px}.profileGrid textarea{min-height:86px}
 
+
+.exhibitBtn{border:1px solid #f4d98a;background:#ffffff12;color:white;border-radius:12px;padding:7px 9px;font-size:11px;font-weight:900}
+.exhibitModal{position:fixed;inset:0;z-index:95;background:var(--ivory);display:none;overflow:auto}.exhibitModal.show{display:block}
+.exhibitTop{position:sticky;top:0;z-index:3;background:linear-gradient(135deg,#0c2c5f,#145b75);color:white;padding:14px 15px;border-bottom:3px solid var(--gold)}
+.exhibitBar{display:flex;justify-content:space-between;align-items:center;gap:10px}.exhibitBar h2{margin:0;font-family:Georgia,serif;font-size:20px}
+.exhibitContent{max-width:1040px;margin:auto;padding:14px 14px 96px}.exhibitProfile{background:linear-gradient(140deg,#fffaf0,#f0e3c4);border:1px solid #d8c18d;border-radius:22px;padding:16px;text-align:center;box-shadow:var(--shadow);margin-bottom:12px}
+.exhibitProfile .artistAvatar{margin:auto}.exhibitProfile h3{color:var(--lapis);margin:8px 0 4px}.exhibitProfile p{color:var(--muted);font-size:12px;line-height:1.8;margin:0}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:4px 0 10px}.chip{white-space:nowrap;border:1px solid #d7c49a;background:#fffaf0;color:var(--lapis2);border-radius:99px;padding:7px 11px;font-size:11px;font-weight:800}.chip.on{background:var(--lapis);color:#fff;border-color:var(--lapis)}
+.guestGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.guestCard{background:#fffdf7;border:1px solid #d9c8a4;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);position:relative}
+.guestCard img,.guestFallback{width:100%;aspect-ratio:1/1;object-fit:cover;display:grid;place-items:center;background:linear-gradient(135deg,#eadfc8,#f8f1e2);font-size:38px}
+.guestInfo{padding:10px}.guestInfo b{display:block;color:var(--lapis2)}.guestInfo small{color:var(--muted);font-size:10px}.heart{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:1px solid #ffffffbb;background:#fffdf4e8;color:#9c3341;font-size:18px;display:grid;place-items:center;box-shadow:0 4px 10px #0002}.heart.on{background:#9c3341;color:#fff}
+.inquiryList{display:grid;gap:7px}.inquiryItem{border:1px solid #dfd1b5;background:#fffdf7;border-radius:13px;padding:10px}.inquiryItem b{color:var(--lapis2)}.inquiryItem small{color:var(--muted);display:block;margin-top:3px}.inquiryItem p{font-size:12px;line-height:1.7;margin:6px 0 0}
+.inquiryFab{position:fixed;right:18px;bottom:24px;z-index:5;border:0;border-radius:999px;padding:12px 15px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#2b2117;font-weight:900;box-shadow:0 10px 24px #0003}
+@media(min-width:700px){.guestGrid{grid-template-columns:repeat(4,1fr)}}
+
 @media(min-width:700px){.kpis{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}.modal{align-items:center;justify-content:center}.sheet{max-width:680px;border-radius:25px}.langmini button{padding:7px 11px}}
 </style>
 </head>
@@ -152,7 +167,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 
      </div>
      <div><h1>Rangin Gallery</h1><div class="tag" data-i18n="tagline">Persian-inspired art portfolio</div></div>
    </div>
-   <div class="langmini"><button data-lang="en">EN</button><button data-lang="es">ES</button><button data-lang="fa">FA</button></div>
+   <div style="display:flex;gap:6px;align-items:center"><button class="exhibitBtn" id="openExhibit" data-i18n="exhibition">Exhibition</button><div class="langmini"><button data-lang="en">EN</button><button data-lang="es">ES</button><button data-lang="fa">FA</button></div></div>
  </div>
 </header>
 
@@ -176,11 +191,11 @@ input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 
   <div class="kpi"><b id="kWorks">0</b><span data-i18n="totalWorks">Total artworks</span></div>
   <div class="kpi"><b id="kPublished">0</b><span data-i18n="published">Published</span></div>
   <div class="kpi"><b id="kViews">0</b><span data-i18n="totalViews">Total views</span></div>
-  <div class="kpi"><b id="kToday">0</b><span data-i18n="todayViews">Views today</span></div>
+  <div class="kpi"><b id="kToday">0</b><span data-i18n="todayViews">Views today</span></div><div class="kpi"><b id="kInquiries">0</b><span data-i18n="inquiries">Inquiries</span></div>
  </div>
  <div class="card decor"><h3 data-i18n="topWorks">Most viewed artworks</h3><div id="topWorks"></div></div>
  <div class="card decor"><h3 data-i18n="viewSources">View sources</h3><div id="sourceBars"></div></div>
- <div class="card"><h3 data-i18n="systemStatus">System status</h3><div class="switch"><span data-i18n="offlineMode">Offline mode</span><b style="color:var(--green)" data-i18n="active">Active</b></div><div class="switch"><span data-i18n="onlineSync">Online sync</span><b id="syncState"></b></div></div>
+ <div class="card"><h3 data-i18n="recentInquiries">Recent inquiries</h3><div id="inquiryList" class="inquiryList"></div></div><div class="card"><h3 data-i18n="systemStatus">System status</h3><div class="switch"><span data-i18n="offlineMode">Offline mode</span><b style="color:var(--green)" data-i18n="active">Active</b></div><div class="switch"><span data-i18n="onlineSync">Online sync</span><b id="syncState"></b></div></div>
 </section>
 
 <section id="works" class="page">
@@ -250,7 +265,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 
   <div id="viewerTitle" class="viewerTitle"></div>
   <div id="viewerMeta" class="viewerMeta"></div>
   <div id="viewerDesc" class="viewerDesc"></div>
-  <div class="foot" style="margin-top:14px"><button class="soft" id="closeViewer" data-i18n="close">Close</button><button class="goldbtn" id="shareArtwork" data-i18n="share">Share</button></div>
+  <div class="foot" style="margin-top:14px"><button class="soft" id="closeViewer" data-i18n="close">Close</button><button class="soft" id="inquireArtwork" data-i18n="askAbout">Ask about artwork</button><button class="goldbtn" id="shareArtwork" data-i18n="share">Share</button></div>
 </div></div></div>
 
 <div class="modal" id="galleryModal"><div class="sheet">
@@ -258,6 +273,32 @@ input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 
  <div class="ornament"></div>
  <div id="publicGalleryGrid" class="grid"></div>
  <div id="publicGalleryEmpty" class="empty" data-i18n="noPublished">No published artwork yet.</div>
+</div></div>
+
+
+<div id="exhibitModal" class="exhibitModal">
+ <div class="exhibitTop">
+   <div class="exhibitBar"><div><h2>Rangin Gallery</h2><div style="font-size:10px;opacity:.75" data-i18n="exhibitionMode">Exhibition mode</div></div><button class="exhibitBtn" id="closeExhibit" data-i18n="backAdmin">Back to admin</button></div>
+ </div>
+ <div class="exhibitContent">
+   <div class="exhibitProfile">
+     <div class="artistAvatar">✦</div><h3 id="exArtistName">Rangin Artist</h3><p id="exArtistBio"></p><small id="exArtistCity" style="display:block;color:var(--muted);margin-top:6px"></small>
+   </div>
+   <input id="exhibitSearch" data-i18n-placeholder="searchGallery" placeholder="Search gallery…">
+   <div id="exhibitChips" class="chips"></div>
+   <div id="guestGrid" class="guestGrid"></div>
+   <div id="guestEmpty" class="empty" data-i18n="noPublished">No published artwork yet.</div>
+ </div>
+</div>
+
+<div class="modal" id="inquiryModal"><div class="sheet">
+  <h2 data-i18n="sendInquiry">Ask about this artwork</h2><div class="ornament"></div>
+  <form id="inquiryForm" class="form">
+    <input id="inqName" required data-i18n-placeholder="yourName" placeholder="Your name">
+    <input id="inqContact" required data-i18n-placeholder="yourContact" placeholder="Email / phone / social">
+    <textarea id="inqMessage" rows="4" required data-i18n-placeholder="yourMessage" placeholder="Your message"></textarea>
+    <div class="foot"><button type="button" class="soft" id="cancelInquiry" data-i18n="cancel">Cancel</button><button class="goldbtn" type="submit" data-i18n="send">Send</button></div>
+  </form>
 </div></div>
 
 <div class="toast" id="toast"></div>
@@ -270,21 +311,26 @@ const I={
 };
 
 
+
+Object.assign(I.en,{exhibition:"Exhibition",exhibitionMode:"Exhibition mode",backAdmin:"Back to admin",searchGallery:"Search gallery…",all:"All",favorites:"Favorites",inquiries:"Inquiries",recentInquiries:"Recent inquiries",noInquiries:"No inquiries yet.",sendInquiry:"Ask about this artwork",yourName:"Your name",yourContact:"Email / phone / social",yourMessage:"Your message",send:"Send",inquirySaved:"Inquiry saved",askAbout:"Ask about artwork"});
+Object.assign(I.es,{exhibition:"Exposición",exhibitionMode:"Modo exposición",backAdmin:"Volver a administración",searchGallery:"Buscar en la galería…",all:"Todas",favorites:"Favoritos",inquiries:"Consultas",recentInquiries:"Consultas recientes",noInquiries:"Todavía no hay consultas.",sendInquiry:"Preguntar por esta obra",yourName:"Tu nombre",yourContact:"Email / teléfono / red social",yourMessage:"Tu mensaje",send:"Enviar",inquirySaved:"Consulta guardada",askAbout:"Preguntar por la obra"});
+Object.assign(I.fa,{exhibition:"نمایشگاه",exhibitionMode:"حالت نمایشگاه",backAdmin:"بازگشت به مدیریت",searchGallery:"جستجو در گالری…",all:"همه",favorites:"علاقه‌مندی‌ها",inquiries:"درخواست‌ها",recentInquiries:"آخرین درخواست‌ها",noInquiries:"هنوز درخواستی ثبت نشده است.",sendInquiry:"درباره این اثر سؤال کنید",yourName:"نام شما",yourContact:"ایمیل / تلفن / شبکه اجتماعی",yourMessage:"پیام شما",send:"ارسال",inquirySaved:"درخواست ذخیره شد",askAbout:"سؤال درباره اثر"});
+
 Object.assign(I.en,{artistBioDefault:"Your artist profile will appear here.",previewGallery:"Preview gallery",featuredCollection:"Featured collection",manage:"Manage",artistProfile:"Artist profile",artistName:"Artist name",artistBio:"Short biography",artistCity:"City / Country",artistWebsite:"Website or social link",saveProfile:"Save profile",profileSaved:"Profile saved",featured:"Featured artwork",close:"Close",share:"Share",galleryPreview:"Gallery preview",noPublished:"No published artwork yet.",shareText:"Artwork from Rangin Gallery"});
 Object.assign(I.es,{artistBioDefault:"Tu perfil de artista aparecerá aquí.",previewGallery:"Vista previa",featuredCollection:"Colección destacada",manage:"Gestionar",artistProfile:"Perfil del artista",artistName:"Nombre del artista",artistBio:"Biografía breve",artistCity:"Ciudad / País",artistWebsite:"Web o red social",saveProfile:"Guardar perfil",profileSaved:"Perfil guardado",featured:"Obra destacada",close:"Cerrar",share:"Compartir",galleryPreview:"Vista previa de la galería",noPublished:"Aún no hay obras publicadas.",shareText:"Obra de Rangin Gallery"});
 Object.assign(I.fa,{artistBioDefault:"پروفایل هنرمند شما در این بخش نمایش داده می‌شود.",previewGallery:"پیش‌نمایش گالری",featuredCollection:"مجموعهٔ ویژه",manage:"مدیریت",artistProfile:"پروفایل هنرمند",artistName:"نام هنرمند",artistBio:"زندگینامه کوتاه",artistCity:"شهر / کشور",artistWebsite:"وب‌سایت یا شبکه اجتماعی",saveProfile:"ذخیره پروفایل",profileSaved:"پروفایل ذخیره شد",featured:"اثر ویژه",close:"بستن",share:"اشتراک‌گذاری",galleryPreview:"پیش‌نمایش گالری",noPublished:"هنوز اثر منتشرشده‌ای وجود ندارد.",shareText:"اثر هنری از Rangin Gallery"});
 
-const K={works:'ag2_works',cats:'ag2_cats',events:'ag2_events',settings:'ag2_settings',lang:'rangin_lang'};
+const K={works:'ag2_works',cats:'ag2_cats',events:'ag2_events',settings:'ag2_settings',lang:'rangin_lang',favs:'rangin_favs',inquiries:'rangin_inquiries'};
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d))}catch(e){return d}};
 let works=load(K.works,[]),cats=load(K.cats,[]),events=load(K.events,[]),settings=load(K.settings,{sync:false,apiUrl:''});
-let lang=localStorage.getItem(K.lang)||'',editing=null,imageData='';
+let lang=localStorage.getItem(K.lang)||'',editing=null,imageData='';let favs=load(K.favs,[]),inquiries=load(K.inquiries,[]),exFilter='all',exQuery='';
 if(!cats.length) cats=['Painting','Drawing','Photography'];
 const t=k=>(I[lang||'en']||I.en)[k]||I.en[k]||k;
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
 const todayKey=()=>new Date().toISOString().slice(0,10);
-function persist(){localStorage.setItem(K.works,JSON.stringify(works));localStorage.setItem(K.cats,JSON.stringify(cats));localStorage.setItem(K.events,JSON.stringify(events.slice(-2000)));localStorage.setItem(K.settings,JSON.stringify(settings))}
+function persist(){localStorage.setItem(K.works,JSON.stringify(works));localStorage.setItem(K.cats,JSON.stringify(cats));localStorage.setItem(K.events,JSON.stringify(events.slice(-2000)));localStorage.setItem(K.settings,JSON.stringify(settings));localStorage.setItem(K.favs,JSON.stringify(favs));localStorage.setItem(K.inquiries,JSON.stringify(inquiries.slice(-500)))}
 function toast(x){const z=$('#toast');z.textContent=x;z.style.display='block';setTimeout(()=>z.style.display='none',2100)}
 function setLang(l,first=false){lang=l;localStorage.setItem(K.lang,l);document.documentElement.lang=l;document.documentElement.dir=l==='fa'?'rtl':'ltr';$$('[data-lang]').forEach(b=>b.classList.toggle('on',b.dataset.lang===l));$$('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));$$('[data-i18n-placeholder]').forEach(e=>e.placeholder=t(e.dataset.i18nPlaceholder));$('#langGate').classList.remove('show');renderAll();if(!first)toast(t('changeLanguage'))}
 if(!lang) $('#langGate').classList.add('show'); else setLang(lang,true);
@@ -298,6 +344,25 @@ function nav(p){$$('.page').forEach(x=>x.classList.toggle('on',x.id===p));$$('.n
 $$('.nav button').forEach(b=>b.onclick=()=>nav(b.dataset.page));
 function viewCount(id){return events.filter(e=>e.type==='view'&&e.workId===id).length}
 function eventLabel(x){return ({view:t('eventView'),search:t('eventSearch'),edit:t('eventEdit'),add:t('eventAdd'),publish:t('eventPublish'),delete:t('eventDelete')})[x]||x}
+
+function renderInquiries(){
+ const box=$('#inquiryList'),arr=[...inquiries].reverse().slice(0,6);
+ box.innerHTML=arr.length?arr.map(q=>'<div class="inquiryItem"><b>'+esc(q.name||'')+'</b><small>'+esc(q.contact||'')+' · '+new Date(q.time).toLocaleString(lang==='fa'?'fa-IR':lang==='es'?'es-ES':'en-GB')+'</small><p>'+esc(q.message||'')+'</p></div>').join(''):'<div class="empty">'+t('noInquiries')+'</div>';
+}
+function renderExhibit(){
+ const a=settings.artist||{};$('#exArtistName').textContent=a.name||'Rangin Artist';$('#exArtistBio').textContent=a.bio||t('artistBioDefault');$('#exArtistCity').textContent=a.city||'';
+ const catsShown=[...new Set(works.filter(w=>w.published&&w.category).map(w=>w.category))];
+ const ch=$('#exhibitChips');ch.innerHTML='<button class="chip '+(exFilter==='all'?'on':'')+'" data-xcat="all">'+t('all')+'</button><button class="chip '+(exFilter==='favs'?'on':'')+'" data-xcat="favs">♥ '+t('favorites')+'</button>'+catsShown.map(c=>'<button class="chip '+(exFilter===c?'on':'')+'" data-xcat="'+esc(c)+'">'+esc(c)+'</button>').join('');
+ $('[data-xcat]').forEach(b=>b.onclick=()=>{exFilter=b.dataset.xcat;renderExhibit()});
+ let arr=works.filter(w=>w.published);
+ if(exFilter==='favs')arr=arr.filter(w=>favs.includes(w.id)); else if(exFilter!=='all')arr=arr.filter(w=>w.category===exFilter);
+ if(exQuery)arr=arr.filter(w=>(w.title+' '+w.description+' '+w.category).toLowerCase().includes(exQuery.toLowerCase()));
+ $('#guestEmpty').style.display=arr.length?'none':'block';
+ $('#guestGrid').innerHTML=arr.map(w=>'<article class="guestCard"><button class="heart '+(favs.includes(w.id)?'on':'')+'" data-fav="'+w.id+'">♥</button><div data-guest="'+w.id+'">'+(w.image?'<img src="'+w.image+'">':'<div class="guestFallback">✦</div>')+'<div class="guestInfo"><b>'+esc(w.title)+'</b><small>'+esc(w.category||t('uncategorized'))+(w.year?' · '+esc(w.year):'')+'</small></div></div></article>').join('');
+ $('[data-guest]').forEach(x=>x.onclick=()=>openViewer(x.dataset.guest));
+ $('[data-fav]').forEach(b=>b.onclick=e=>{e.stopPropagation();const id=b.dataset.fav;favs=favs.includes(id)?favs.filter(x=>x!==id):[...favs,id];persist();renderExhibit()});
+}
+
 function renderArtistProfile(){
  const a=settings.artist||{};
  $('#artistDisplayName').textContent=a.name||'Rangin Artist';
@@ -331,13 +396,13 @@ function openViewer(id){
 }
 function renderDashboard(){
  const views=events.filter(e=>e.type==='view');
- $('#kWorks').textContent=works.length;$('#kPublished').textContent=works.filter(w=>w.published).length;$('#kViews').textContent=views.length;$('#kToday').textContent=views.filter(e=>e.day===todayKey()).length;
+ $('#kWorks').textContent=works.length;$('#kPublished').textContent=works.filter(w=>w.published).length;$('#kViews').textContent=views.length;$('#kToday').textContent=views.filter(e=>e.day===todayKey()).length;$('#kInquiries').textContent=inquiries.length;
  $('#aViews').textContent=views.length;$('#aSearch').textContent=events.filter(e=>e.type==='search').length;$('#aEdits').textContent=events.filter(e=>e.type==='edit').length;$('#aAdds').textContent=events.filter(e=>e.type==='add').length;
  const ranked=works.map(w=>({...w,v:viewCount(w.id)})).sort((a,b)=>b.v-a.v).slice(0,5),mx=Math.max(1,...ranked.map(x=>x.v));
  $('#topWorks').innerHTML=ranked.length?ranked.map(x=>'<div class="barrow"><span>'+esc(x.title)+'</span><div class="bar"><i style="width:'+Math.round(x.v/mx*100)+'%"></i></div><b>'+x.v+'</b></div>').join(''):'<small>'+t('noViews')+'</small>';
  const src={};views.forEach(e=>src[e.source||t('insideApp')]=(src[e.source||t('insideApp')]||0)+1);const ss=Object.entries(src).sort((a,b)=>b[1]-a[1]),sm=Math.max(1,...ss.map(x=>x[1]));
  $('#sourceBars').innerHTML=ss.length?ss.map(x=>'<div class="barrow"><span>'+esc(x[0])+'</span><div class="bar"><i style="width:'+Math.round(x[1]/sm*100)+'%"></i></div><b>'+x[1]+'</b></div>').join(''):'<small>'+t('noSource')+'</small>';
- $('#syncState').textContent=settings.sync&&settings.apiUrl?t('syncActive'):t('ready');$('#syncState').style.color=settings.sync&&settings.apiUrl?'var(--green)':'#946816';
+ $('#syncState').textContent=settings.sync&&settings.apiUrl?t('syncActive'):t('ready');$('#syncState').style.color=settings.sync&&settings.apiUrl?'var(--green)':'#946816';renderInquiries();
 }
 function filteredWorks(){let a=[...works],q=$('#search').value.trim().toLowerCase();if(q)a=a.filter(w=>(w.title+' '+w.description+' '+w.category).toLowerCase().includes(q));const s=$('#sort').value;if(s==='new')a.sort((a,b)=>b.created-a.created);if(s==='views')a.sort((a,b)=>viewCount(b.id)-viewCount(a.id));if(s==='title')a.sort((a,b)=>a.title.localeCompare(b.title,lang));return a}
 function renderWorks(){const a=filteredWorks(),g=$('#worksGrid');g.innerHTML='';$('#worksEmpty').hidden=!!a.length;a.forEach(w=>{const el=document.createElement('article');el.className='work';el.innerHTML='<div class="pic" data-view="'+w.id+'">'+(w.image?'<img src="'+w.image+'">':'✦')+'</div><div class="wb"><div class="title">'+esc(w.title)+'</div><div class="meta">'+esc(w.category||t('uncategorized'))+(w.year?' · '+esc(w.year):'')+' · '+viewCount(w.id)+' '+t('views')+'</div><span class="badge '+(w.published?'pub':'draft')+'">'+(w.published?t('published'):t('draft'))+'</span><div class="actions"><button data-e="'+w.id+'">'+t('edit')+'</button><button data-t="'+w.id+'">'+(w.published?t('unpublish'):t('publish'))+'</button><button data-d="'+w.id+'">'+t('delete')+'</button></div></div>';g.appendChild(el)});
@@ -367,6 +432,15 @@ $('#backup').onclick=()=>download('rangin-gallery-backup.json',JSON.stringify({v
 $('#restore').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{const d=JSON.parse(await f.text());works=Array.isArray(d.works)?d.works:works;cats=Array.isArray(d.cats)?d.cats:cats;events=Array.isArray(d.events)?d.events:events;settings=d.settings||settings;persist();renderAll();toast(t('restoreDone'))}catch(err){toast(t('invalidBackup'))}};
 $('#exportCsv').onclick=()=>{const rows=[['time','type','work','source'],...events.map(e=>[new Date(e.time).toISOString(),e.type,works.find(w=>w.id===e.workId)?.title||'',e.source||''])];download('rangin-analytics.csv',rows.map(r=>r.map(x=>'"'+String(x).replaceAll('"','""')+'"').join(',')).join('\n'),'text/csv')};
 $('#clearAnalytics').onclick=()=>{if(confirm(t('clearAnalytics')+'?')){events=[];persist();renderAll();toast(t('analyticsCleared'))}};
+
+
+$('#openExhibit').onclick=()=>{renderExhibit();$('#exhibitModal').classList.add('show')};
+$('#closeExhibit').onclick=()=>$('#exhibitModal').classList.remove('show');
+$('#exhibitSearch').oninput=e=>{exQuery=e.target.value.trim();renderExhibit()};
+$('#inquireArtwork').onclick=()=>{if(viewerWorkId){$('#inquiryModal').classList.add('show')}};
+$('#cancelInquiry').onclick=()=>$('#inquiryModal').classList.remove('show');
+$('#inquiryForm').onsubmit=e=>{e.preventDefault();inquiries.push({id:uid(),workId:viewerWorkId,name:$('#inqName').value.trim(),contact:$('#inqContact').value.trim(),message:$('#inqMessage').value.trim(),time:Date.now()});persist();$('#inquiryForm').reset();$('#inquiryModal').classList.remove('show');renderDashboard();toast(t('inquirySaved'))};
+$('#inquiryModal').onclick=e=>{if(e.target.id==='inquiryModal')e.currentTarget.classList.remove('show')};
 
 $('#goWorks').onclick=()=>nav('works');
 $('#previewGallery').onclick=()=>{renderPublicGallery();$('#galleryModal').classList.add('show')};
