@@ -1,163 +1,286 @@
 <!doctype html>
-<html lang="fa" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>گالری آثار من - مدیریت</title>
+<meta name="theme-color" content="#143a73">
+<title>Rangin Gallery</title>
 <style>
-:root{--bg:#f5f4f0;--card:#fff;--txt:#171717;--muted:#777;--line:#e5e2da;--accent:#171717;--good:#147a43;--warn:#a56a00;--danger:#b3261e}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:Tahoma,system-ui,sans-serif}
-button,input,textarea,select{font:inherit}.app{max-width:980px;margin:auto;min-height:100vh;padding-bottom:78px}
-header{position:sticky;top:0;z-index:10;background:#f5f4f0f2;backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:13px 14px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px}.brand h1{margin:0;font-size:19px}.sub{font-size:11px;color:var(--muted);margin-top:3px}
-button{border:0;border-radius:12px;padding:10px 13px;font-weight:700}.primary{background:var(--accent);color:#fff}.soft{background:#eceae4}.danger{background:#fde8e6;color:var(--danger)}
-main{padding:14px}.page{display:none}.page.on{display:block}.section-title{display:flex;justify-content:space-between;align-items:center;margin:4px 0 12px}.section-title h2{font-size:17px;margin:0}
-.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.kpi{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:13px}.kpi b{font-size:24px;display:block}.kpi span{font-size:11px;color:var(--muted)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:13px;margin-top:10px}.card h3{font-size:14px;margin:0 0 10px}.barrow{display:grid;grid-template-columns:90px 1fr 42px;gap:8px;align-items:center;font-size:12px;margin:8px 0}.bar{height:9px;background:#eceae4;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:#222;border-radius:99px}
-.tools{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:9px}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;padding:11px;outline:none}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.work{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}.pic{aspect-ratio:1/1;background:#e9e7e1;display:grid;place-items:center;font-size:34px;overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover}.wb{padding:10px}.title{font-weight:800}.meta{font-size:11px;color:var(--muted);margin-top:3px}.badge{display:inline-block;font-size:10px;border-radius:99px;padding:4px 7px;margin-top:6px;background:#eee}.badge.pub{background:#e6f5ec;color:var(--good)}.badge.draft{background:#fff2d8;color:var(--warn)}.actions{display:flex;gap:6px;margin-top:8px}.actions button{flex:1;padding:7px;background:#efede8;font-size:11px}
-.list{display:grid;gap:8px}.rowitem{background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px;display:flex;align-items:center;justify-content:space-between;gap:8px}.rowitem small{color:var(--muted)}
-.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{padding:9px 5px;border-bottom:1px solid var(--line);text-align:right}.table th{color:var(--muted);font-weight:600}
-.empty{text-align:center;color:var(--muted);padding:38px 12px;background:#fff;border:1px dashed #c9c5bb;border-radius:16px}
-.nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:5px max(6px,env(safe-area-inset-right)) calc(5px + env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left))}
-.nav button{background:none;padding:7px 2px;font-size:10px;color:#777}.nav button b{display:block;font-size:18px;margin-bottom:2px}.nav button.on{color:#111;background:#f0eee8}
-.modal{position:fixed;inset:0;background:#0007;display:none;align-items:flex-end;z-index:40}.modal.show{display:flex}.sheet{width:100%;max-height:94vh;overflow:auto;background:#faf9f6;border-radius:23px 23px 0 0;padding:16px}.form{display:grid;gap:9px}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:8px}.picker{border:1px dashed #aaa59a;background:#fff;border-radius:14px;padding:13px;text-align:center}.preview{display:none;width:100%;max-height:230px;object-fit:contain;border-radius:11px;margin-top:8px}.foot{display:flex;gap:8px}.foot button{flex:1}.switch{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.switch input{width:auto}
-.toast{position:fixed;left:50%;bottom:82px;transform:translateX(-50%);background:#111;color:#fff;border-radius:12px;padding:9px 13px;font-size:12px;display:none;z-index:60}
-@media(min-width:700px){.kpis{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}.modal{align-items:center;justify-content:center}.sheet{max-width:660px;border-radius:23px}.nav{left:50%;transform:translateX(-50%);max-width:980px}}
+:root{
+  --lapis:#143a73;--lapis2:#0c2c5f;--turq:#159c9b;--gold:#c99a3c;--gold2:#e2bd68;
+  --ivory:#fbf6e9;--paper:#fffdf7;--ink:#26201b;--muted:#746b5f;--red:#9c3341;
+  --green:#2e7b58;--line:#dfd4bd;--shadow:0 12px 34px #402f1718;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--ivory);color:var(--ink);font-family:Tahoma,"Segoe UI",Arial,sans-serif}
+body{
+  background-image:
+    radial-gradient(circle at 12px 12px,#c99a3c16 1.2px,transparent 1.3px),
+    radial-gradient(circle at 0 0,#159c9b12 1px,transparent 1.2px);
+  background-size:24px 24px,32px 32px
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.app{max-width:1040px;margin:auto;min-height:100vh;padding-bottom:92px}
+.hero{
+  position:sticky;top:0;z-index:12;color:white;padding:14px 15px 13px;
+  background:
+    linear-gradient(135deg,#0c2c5fef,#143a73f2 55%,#125f73ef),
+    repeating-linear-gradient(45deg,transparent 0 12px,#ffffff0b 12px 13px);
+  border-bottom:3px solid var(--gold);
+  box-shadow:0 8px 22px #0b2e5730;
+}
+.hero:after{
+  content:"";position:absolute;left:0;right:0;bottom:-3px;height:3px;
+  background:linear-gradient(90deg,var(--gold),var(--turq),var(--gold2),var(--red),var(--gold))
+}
+.brandrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:11px}
+.emblem{
+ width:45px;height:45px;border-radius:14px;display:grid;place-items:center;
+ border:1px solid #f5d88d99;background:#ffffff12;box-shadow:inset 0 0 0 4px #ffffff08
+}
+.emblem svg{width:34px;height:34px}
+.brand h1{font-family:Georgia,"Times New Roman",serif;letter-spacing:.4px;font-size:20px;margin:0}
+.brand .tag{font-size:10px;opacity:.78;margin-top:3px}
+.langmini{display:flex;gap:5px}.langmini button{border:1px solid #ffffff55;background:#ffffff13;color:white;padding:6px 8px;border-radius:10px;font-size:11px}
+.langmini button.on{background:var(--gold);color:#1f1a12;border-color:var(--gold2)}
+main{padding:15px}
+.page{display:none}.page.on{display:block}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:2px 0 12px}
+.section-title h2{margin:0;font-size:18px;color:var(--lapis2)}
+.ornament{height:10px;margin:4px 0 16px;position:relative}
+.ornament:before{content:"";position:absolute;left:0;right:0;top:4px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),var(--turq),var(--gold),transparent)}
+.ornament:after{content:"✦";position:absolute;left:50%;transform:translateX(-50%);top:-5px;background:var(--ivory);padding:0 8px;color:var(--gold)}
+.primary,.soft,.danger,.goldbtn{border:0;border-radius:13px;padding:10px 13px;font-weight:800}
+.primary{background:linear-gradient(135deg,var(--lapis),#1b5b93);color:#fff;box-shadow:0 5px 14px #143a7325}
+.goldbtn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#2d2114}
+.soft{background:#f0e8d6;color:var(--lapis2);border:1px solid #d9c9a9}
+.danger{background:#fae8e8;color:#8e2430;border:1px solid #efc7ca}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kpi{
+  position:relative;overflow:hidden;background:linear-gradient(160deg,#fffdf8,#f6ecd9);
+  border:1px solid #ddcda9;border-radius:19px;padding:14px;box-shadow:var(--shadow)
+}
+.kpi:before{content:"";position:absolute;width:70px;height:70px;inset:auto -18px -24px auto;border:10px double #159c9b10;transform:rotate(45deg)}
+.kpi b{display:block;font-size:27px;color:var(--lapis);font-family:Georgia,serif}
+.kpi span{font-size:11px;color:var(--muted)}
+.card{
+  background:linear-gradient(165deg,#fffef9,#fbf4e6);border:1px solid var(--line);
+  border-radius:20px;padding:14px;margin-top:11px;box-shadow:var(--shadow);position:relative;overflow:hidden
+}
+.card.decor:before,.work:before{
+ content:"";position:absolute;inset:0;pointer-events:none;opacity:.34;
+ background-image:linear-gradient(45deg,transparent 46%,#c99a3c14 47% 53%,transparent 54%);
+ background-size:24px 24px
+}
+.card h3{position:relative;font-size:14px;color:var(--lapis);margin:0 0 11px}
+.barrow{position:relative;display:grid;grid-template-columns:100px 1fr 42px;gap:8px;align-items:center;font-size:12px;margin:8px 0}
+.bar{height:9px;background:#e8deca;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--turq),var(--lapis));border-radius:99px}
+.tools{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px}
+input,textarea,select{width:100%;border:1px solid #d8c9aa;border-radius:13px;background:#fffdf8;padding:11px;color:var(--ink);outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 0 3px #159c9b15}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.work{position:relative;background:#fffdf7;border:1px solid #d7c8a8;border-radius:19px;overflow:hidden;box-shadow:var(--shadow)}
+.pic{position:relative;aspect-ratio:1/1;background:linear-gradient(135deg,#e9ddc5,#f7f0df);display:grid;place-items:center;font-size:38px;overflow:hidden;border-bottom:3px solid var(--gold)}
+.pic img{width:100%;height:100%;object-fit:cover}
+.pic:after{content:"";position:absolute;inset:7px;border:1px solid #f5df9c88;border-radius:11px;pointer-events:none}
+.wb{position:relative;padding:11px}.title{font-weight:900;color:var(--lapis2)}.meta{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.6}
+.badge{display:inline-block;font-size:10px;border-radius:99px;padding:4px 8px;margin-top:7px;background:#eee}.badge.pub{background:#e2f3e9;color:var(--green)}.badge.draft{background:#fff0ce;color:#8a5a09}
+.actions{display:flex;gap:5px;margin-top:9px}.actions button{flex:1;padding:7px;border:0;border-radius:10px;background:#efe6d2;color:var(--lapis2);font-size:10px;font-weight:800}
+.list{display:grid;gap:8px}.rowitem{background:#fffdf7;border:1px solid var(--line);border-radius:15px;padding:11px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 4px 13px #4a36100d}.rowitem small{color:var(--muted)}
+.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{padding:9px 5px;border-bottom:1px solid #e8ddc7;text-align:start}.table th{color:var(--lapis);font-weight:800}
+.empty{text-align:center;color:var(--muted);padding:36px 12px;background:#fffdf7;border:1px dashed #c7b78f;border-radius:17px}
+.note{font-size:12px;line-height:1.8;color:var(--muted);background:#f7eedc;border-inline-start:4px solid var(--gold);padding:10px;border-radius:10px;margin-top:9px}
+.nav{
+ position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,1040px);z-index:20;
+ background:#fffdf9ef;backdrop-filter:blur(12px);border-top:2px solid var(--gold);
+ display:grid;grid-template-columns:repeat(5,1fr);padding:5px 6px calc(5px + env(safe-area-inset-bottom));box-shadow:0 -9px 25px #422f1618
+}
+.nav button{border:0;background:none;padding:7px 2px;font-size:10px;color:#756a59;border-radius:11px}.nav button b{display:block;font-size:18px;margin-bottom:1px;color:var(--lapis)}.nav button.on{color:var(--lapis2);background:#f2e8d2}
+.modal{position:fixed;inset:0;background:#0c2346a8;display:none;align-items:flex-end;z-index:50;backdrop-filter:blur(3px)}.modal.show{display:flex}
+.sheet{width:100%;max-height:94vh;overflow:auto;background:var(--ivory);border-radius:25px 25px 0 0;padding:17px;border-top:3px solid var(--gold)}
+.form{display:grid;gap:9px}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:8px}.picker{border:1px dashed #bca674;background:#fffdf7;border-radius:16px;padding:13px;text-align:center}.preview{display:none;width:100%;max-height:240px;object-fit:contain;border-radius:12px;margin-top:8px}.foot{display:flex;gap:8px}.foot button{flex:1}
+.switch{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #e6dbc4}.switch input{width:auto}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--lapis2);color:#fff;border:1px solid var(--gold);border-radius:13px;padding:10px 14px;font-size:12px;display:none;z-index:80}
+.langGate{position:fixed;inset:0;z-index:100;background:
+ radial-gradient(circle at 20% 20%,#159c9b38,transparent 32%),
+ radial-gradient(circle at 80% 30%,#c99a3c35,transparent 34%),
+ linear-gradient(145deg,#0b2858,#143a73 55%,#0d6570);display:none;align-items:center;justify-content:center;padding:22px}
+.langGate.show{display:flex}
+.langCard{width:min(500px,100%);background:#fffaf0;border:2px solid var(--gold);border-radius:28px;padding:24px;text-align:center;box-shadow:0 24px 60px #0005;position:relative;overflow:hidden}
+.langCard:before{content:"";position:absolute;inset:8px;border:1px solid #159c9b45;border-radius:21px;pointer-events:none}
+.bigRosette{width:96px;height:96px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(from 22.5deg,var(--lapis) 0 12.5%,var(--gold) 12.5% 25%,var(--turq) 25% 37.5%,var(--red) 37.5% 50%,var(--lapis) 50% 62.5%,var(--gold) 62.5% 75%,var(--turq) 75% 87.5%,var(--red) 87.5%);box-shadow:inset 0 0 0 12px #fff7e7,0 7px 20px #143a7338}.bigRosette span{background:#fff7e7;border-radius:50%;width:46px;height:46px;display:grid;place-items:center;color:var(--lapis);font-size:25px}
+.langCard h1{font-family:Georgia,serif;color:var(--lapis);margin:7px 0 4px}.langCard p{color:var(--muted);font-size:13px}.langChoices{display:grid;gap:9px;margin-top:18px}.langChoices button{border:1px solid #cfbb8d;background:#fffdf8;color:var(--lapis2);border-radius:14px;padding:13px;font-weight:900}.langChoices button:hover{background:#f2e4c8}
+.artIntro{background:linear-gradient(135deg,#143a73,#11697a);color:white;border-radius:22px;padding:18px;margin-bottom:12px;position:relative;overflow:hidden;border:2px solid #d5aa4f;box-shadow:var(--shadow)}
+.artIntro:before{content:"";position:absolute;inset:-20px;background:repeating-conic-gradient(from 0deg at 50% 50%,#ffffff0b 0 10deg,transparent 10deg 20deg);opacity:.55}.artIntro>*{position:relative}.artIntro h2{margin:0 0 5px;font-family:Georgia,serif}.artIntro p{margin:0;font-size:12px;opacity:.85;line-height:1.7}
+@media(min-width:700px){.kpis{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}.modal{align-items:center;justify-content:center}.sheet{max-width:680px;border-radius:25px}.langmini button{padding:7px 11px}}
 </style>
 </head>
 <body>
+<div id="langGate" class="langGate">
+ <div class="langCard">
+   <div class="bigRosette"><span>✦</span></div>
+   <h1>Rangin Gallery</h1>
+   <p>Choose your language · Elige tu idioma · زبان خود را انتخاب کنید</p>
+   <div class="langChoices">
+     <button data-picklang="en">English</button>
+     <button data-picklang="es">Español</button>
+     <button data-picklang="fa">فارسی</button>
+   </div>
+ </div>
+</div>
+
 <div class="app">
-<header><div class="top"><div class="brand"><h1>گالری آثار من</h1><div class="sub">مدیریت حرفه‌ای • نسخه 2.0</div></div><button id="quickAdd" class="primary">+ اثر جدید</button></div></header>
+<header class="hero">
+ <div class="brandrow">
+   <div class="brand">
+     <div class="emblem" aria-hidden="true">
+       <svg viewBox="0 0 100 100"><path d="M50 6 62 31 90 22 69 44 94 57 65 58 70 88 50 67 30 88 35 58 6 57 31 44 10 22 38 31Z" fill="none" stroke="#e2bd68" stroke-width="5"/><circle cx="50" cy="50" r="13" fill="#159c9b" stroke="#fff2c4" stroke-width="3"/></svg>
+     </div>
+     <div><h1>Rangin Gallery</h1><div class="tag" data-i18n="tagline">Persian-inspired art portfolio</div></div>
+   </div>
+   <div class="langmini"><button data-lang="en">EN</button><button data-lang="es">ES</button><button data-lang="fa">FA</button></div>
+ </div>
+</header>
+
 <main>
 <section id="dashboard" class="page on">
-<div class="section-title"><h2>داشبورد مدیریت</h2><button class="soft" id="refreshDash">بروزرسانی</button></div>
-<div class="kpis">
-<div class="kpi"><b id="kWorks">0</b><span>کل آثار</span></div>
-<div class="kpi"><b id="kPublished">0</b><span>منتشرشده</span></div>
-<div class="kpi"><b id="kViews">0</b><span>کل بازدید</span></div>
-<div class="kpi"><b id="kToday">0</b><span>بازدید امروز</span></div>
-</div>
-<div class="card"><h3>پربازدیدترین آثار</h3><div id="topWorks"></div></div>
-<div class="card"><h3>منبع بازدید</h3><div id="sourceBars"></div></div>
-<div class="card"><h3>وضعیت سیستم</h3><div class="switch"><span>حالت آفلاین</span><b style="color:var(--good)">فعال</b></div><div class="switch"><span>همگام‌سازی آنلاین</span><b id="syncState">آماده اتصال</b></div></div>
+ <div class="artIntro"><h2 data-i18n="welcomeTitle">Your art, presented with character</h2><p data-i18n="welcomeText">Manage your collection, monitor engagement and keep your portfolio ready for online expansion.</p></div>
+ <div class="section-title"><h2 data-i18n="dashboard">Dashboard</h2><button class="soft" id="refreshDash" data-i18n="refresh">Refresh</button></div>
+ <div class="ornament"></div>
+ <div class="kpis">
+  <div class="kpi"><b id="kWorks">0</b><span data-i18n="totalWorks">Total artworks</span></div>
+  <div class="kpi"><b id="kPublished">0</b><span data-i18n="published">Published</span></div>
+  <div class="kpi"><b id="kViews">0</b><span data-i18n="totalViews">Total views</span></div>
+  <div class="kpi"><b id="kToday">0</b><span data-i18n="todayViews">Views today</span></div>
+ </div>
+ <div class="card decor"><h3 data-i18n="topWorks">Most viewed artworks</h3><div id="topWorks"></div></div>
+ <div class="card decor"><h3 data-i18n="viewSources">View sources</h3><div id="sourceBars"></div></div>
+ <div class="card"><h3 data-i18n="systemStatus">System status</h3><div class="switch"><span data-i18n="offlineMode">Offline mode</span><b style="color:var(--green)" data-i18n="active">Active</b></div><div class="switch"><span data-i18n="onlineSync">Online sync</span><b id="syncState"></b></div></div>
 </section>
 
 <section id="works" class="page">
-<div class="section-title"><h2>مدیریت آثار</h2><button class="primary" id="addWork">+ افزودن</button></div>
-<div class="tools"><input id="search" placeholder="جستجو در آثار…"><select id="sort"><option value="new">جدیدترین</option><option value="views">پربازدیدترین</option><option value="title">عنوان</option></select></div>
-<div class="grid" id="worksGrid"></div><div id="worksEmpty" class="empty" hidden>هنوز اثری ثبت نشده.</div>
+ <div class="section-title"><h2 data-i18n="worksManagement">Artwork management</h2><button class="goldbtn" id="addWork" data-i18n="addArtwork">+ Add artwork</button></div>
+ <div class="ornament"></div>
+ <div class="tools"><input id="search" data-i18n-placeholder="searchWorks" placeholder="Search artworks…"><select id="sort"><option value="new" data-i18n="newest">Newest</option><option value="views" data-i18n="mostViewed">Most viewed</option><option value="title" data-i18n="title">Title</option></select></div>
+ <div class="grid" id="worksGrid"></div><div id="worksEmpty" class="empty" hidden data-i18n="noWorks">No artwork has been added yet.</div>
 </section>
 
 <section id="categories" class="page">
-<div class="section-title"><h2>دسته‌بندی‌ها</h2><button class="primary" id="addCategory">+ دسته جدید</button></div>
-<div id="categoryList" class="list"></div>
+ <div class="section-title"><h2 data-i18n="categories">Categories</h2><button class="goldbtn" id="addCategory" data-i18n="newCategory">+ New category</button></div>
+ <div class="ornament"></div><div id="categoryList" class="list"></div>
 </section>
 
 <section id="analytics" class="page">
-<div class="section-title"><h2>آمار و گزارش‌ها</h2><button class="soft" id="exportCsv">خروجی CSV</button></div>
-<div class="kpis">
-<div class="kpi"><b id="aViews">0</b><span>بازدید ثبت‌شده</span></div>
-<div class="kpi"><b id="aSearch">0</b><span>جستجوها</span></div>
-<div class="kpi"><b id="aEdits">0</b><span>ویرایش‌ها</span></div>
-<div class="kpi"><b id="aAdds">0</b><span>آثار افزوده‌شده</span></div>
-</div>
-<div class="card"><h3>آخرین رویدادها</h3><div style="overflow:auto"><table class="table"><thead><tr><th>زمان</th><th>نوع</th><th>اثر</th><th>منبع</th></tr></thead><tbody id="eventsBody"></tbody></table></div></div>
+ <div class="section-title"><h2 data-i18n="analytics">Analytics & reports</h2><button class="soft" id="exportCsv" data-i18n="exportCsv">Export CSV</button></div>
+ <div class="ornament"></div>
+ <div class="kpis"><div class="kpi"><b id="aViews">0</b><span data-i18n="recordedViews">Recorded views</span></div><div class="kpi"><b id="aSearch">0</b><span data-i18n="searches">Searches</span></div><div class="kpi"><b id="aEdits">0</b><span data-i18n="edits">Edits</span></div><div class="kpi"><b id="aAdds">0</b><span data-i18n="addedWorks">Added works</span></div></div>
+ <div class="card"><h3 data-i18n="recentEvents">Recent events</h3><div style="overflow:auto"><table class="table"><thead><tr><th data-i18n="time">Time</th><th data-i18n="type">Type</th><th data-i18n="artwork">Artwork</th><th data-i18n="source">Source</th></tr></thead><tbody id="eventsBody"></tbody></table></div></div>
+ <div class="note" data-i18n="analyticsNote">Local analytics count activity on this device. Connect a server to collect real visitor data from multiple devices.</div>
 </section>
 
 <section id="settings" class="page">
-<div class="section-title"><h2>تنظیمات و پشتیبان</h2></div>
-<div class="card">
-<h3>همگام‌سازی آنلاین</h3>
-<div class="switch"><span>فعال‌سازی همگام‌سازی</span><input type="checkbox" id="syncEnabled"></div>
-<input id="apiUrl" placeholder="آدرس API سرور، مثلا https://example.com/api">
-<button class="soft" id="testSync" style="margin-top:8px;width:100%">آزمایش اتصال</button>
-<small id="syncMsg" style="display:block;color:var(--muted);margin-top:7px">بدون سرور، اپ کاملاً آفلاین کار می‌کند.</small>
-</div>
-<div class="card"><h3>پشتیبان‌گیری</h3><div class="twocol"><button class="soft" id="backup">خروجی JSON</button><label class="soft" style="padding:10px;text-align:center;border-radius:12px;font-weight:700">بازیابی<input hidden id="restore" type="file" accept=".json,application/json"></label></div></div>
-<div class="card"><h3>آمار محلی</h3><button class="danger" id="clearAnalytics" style="width:100%">پاک‌کردن آمار محلی</button></div>
+ <div class="section-title"><h2 data-i18n="settings">Settings</h2></div><div class="ornament"></div>
+ <div class="card"><h3 data-i18n="language">Language</h3><div class="langChoices"><button data-setlang="en">English</button><button data-setlang="es">Español</button><button data-setlang="fa">فارسی</button></div></div>
+ <div class="card"><h3 data-i18n="onlineSync">Online sync</h3><div class="switch"><span data-i18n="enableSync">Enable sync</span><input type="checkbox" id="syncEnabled"></div><input id="apiUrl" data-i18n-placeholder="serverUrl" placeholder="Server API URL"><button class="soft" id="testSync" style="margin-top:8px;width:100%" data-i18n="testConnection">Test connection</button><small id="syncMsg" style="display:block;color:var(--muted);margin-top:7px" data-i18n="offlineWorks">Without a server the app still works fully offline.</small></div>
+ <div class="card"><h3 data-i18n="backupRestore">Backup & restore</h3><div class="twocol"><button class="soft" id="backup" data-i18n="exportJson">Export JSON</button><label class="soft" style="padding:10px;text-align:center;border-radius:13px;font-weight:800"><span data-i18n="restore">Restore</span><input hidden id="restore" type="file" accept=".json,application/json"></label></div></div>
+ <div class="card"><h3 data-i18n="localAnalytics">Local analytics</h3><button class="danger" id="clearAnalytics" style="width:100%" data-i18n="clearAnalytics">Clear local analytics</button></div>
 </section>
 </main>
 </div>
 
 <nav class="nav">
-<button class="on" data-page="dashboard"><b>⌂</b>داشبورد</button>
-<button data-page="works"><b>▦</b>آثار</button>
-<button data-page="categories"><b>◫</b>دسته‌ها</button>
-<button data-page="analytics"><b>◔</b>آمار</button>
-<button data-page="settings"><b>⚙</b>تنظیمات</button>
+ <button class="on" data-page="dashboard"><b>⌂</b><span data-i18n="dashboard">Dashboard</span></button>
+ <button data-page="works"><b>▦</b><span data-i18n="works">Works</span></button>
+ <button data-page="categories"><b>✦</b><span data-i18n="categories">Categories</span></button>
+ <button data-page="analytics"><b>◔</b><span data-i18n="analyticsShort">Analytics</span></button>
+ <button data-page="settings"><b>⚙</b><span data-i18n="settings">Settings</span></button>
 </nav>
 
-<div class="modal" id="workModal"><div class="sheet"><h2 id="modalTitle">افزودن اثر</h2><form id="workForm" class="form">
-<div class="picker"><label class="soft" style="display:inline-block;padding:9px 12px;border-radius:11px" for="image">انتخاب عکس</label><input hidden type="file" id="image" accept="image/*"><img id="preview" class="preview"></div>
-<input required id="title" placeholder="عنوان اثر">
-<div class="twocol"><select id="category"></select><input id="year" inputmode="numeric" placeholder="سال"></div>
-<textarea id="description" rows="4" placeholder="توضیحات"></textarea>
-<div class="twocol"><input id="price" inputmode="decimal" placeholder="قیمت"><select id="currency"><option>€</option><option>$</option><option>تومان</option></select></div>
-<div class="switch"><span>منتشر شود</span><input type="checkbox" id="published" checked></div>
-<div class="foot"><button type="button" class="soft" id="cancelWork">انصراف</button><button class="primary" type="submit">ذخیره</button></div>
+<div class="modal" id="workModal"><div class="sheet"><h2 id="modalTitle" data-i18n="addArtworkTitle">Add artwork</h2><div class="ornament"></div><form id="workForm" class="form">
+ <div class="picker"><label class="soft" style="display:inline-block;padding:9px 12px;border-radius:11px" for="image" data-i18n="chooseImage">Choose image</label><input hidden type="file" id="image" accept="image/*"><img id="preview" class="preview"></div>
+ <input required id="title" data-i18n-placeholder="artworkTitle" placeholder="Artwork title">
+ <div class="twocol"><select id="category"></select><input id="year" inputmode="numeric" data-i18n-placeholder="year" placeholder="Year"></div>
+ <textarea id="description" rows="4" data-i18n-placeholder="description" placeholder="Description"></textarea>
+ <div class="twocol"><input id="price" inputmode="decimal" data-i18n-placeholder="price" placeholder="Price"><select id="currency"><option>€</option><option>$</option><option>تومان</option></select></div>
+ <div class="switch"><span data-i18n="publishNow">Publish</span><input type="checkbox" id="published" checked></div>
+ <div class="foot"><button type="button" class="soft" id="cancelWork" data-i18n="cancel">Cancel</button><button class="primary" type="submit" data-i18n="save">Save</button></div>
 </form></div></div>
 
-<div class="modal" id="categoryModal"><div class="sheet"><h2>دسته‌بندی جدید</h2><form id="categoryForm" class="form"><input id="categoryName" required placeholder="نام دسته"><div class="foot"><button type="button" class="soft" id="cancelCategory">انصراف</button><button class="primary">ذخیره</button></div></form></div></div>
+<div class="modal" id="categoryModal"><div class="sheet"><h2 data-i18n="newCategoryTitle">New category</h2><div class="ornament"></div><form id="categoryForm" class="form"><input id="categoryName" required data-i18n-placeholder="categoryName" placeholder="Category name"><div class="foot"><button type="button" class="soft" id="cancelCategory" data-i18n="cancel">Cancel</button><button class="primary" data-i18n="save">Save</button></div></form></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
-const K={works:'ag2_works',cats:'ag2_cats',events:'ag2_events',settings:'ag2_settings'};
+const I={
+ en:{tagline:"Persian-inspired art portfolio",welcomeTitle:"Your art, presented with character",welcomeText:"Manage your collection, monitor engagement and keep your portfolio ready for online expansion.",dashboard:"Dashboard",refresh:"Refresh",totalWorks:"Total artworks",published:"Published",totalViews:"Total views",todayViews:"Views today",topWorks:"Most viewed artworks",viewSources:"View sources",systemStatus:"System status",offlineMode:"Offline mode",active:"Active",onlineSync:"Online sync",worksManagement:"Artwork management",addArtwork:"+ Add artwork",searchWorks:"Search artworks…",newest:"Newest",mostViewed:"Most viewed",title:"Title",noWorks:"No artwork has been added yet.",categories:"Categories",newCategory:"+ New category",analytics:"Analytics & reports",analyticsShort:"Analytics",exportCsv:"Export CSV",recordedViews:"Recorded views",searches:"Searches",edits:"Edits",addedWorks:"Added works",recentEvents:"Recent events",time:"Time",type:"Type",artwork:"Artwork",source:"Source",analyticsNote:"Local analytics count activity on this device. Connect a server to collect real visitor data from multiple devices.",settings:"Settings",language:"Language",enableSync:"Enable sync",serverUrl:"Server API URL",testConnection:"Test connection",offlineWorks:"Without a server the app still works fully offline.",backupRestore:"Backup & restore",exportJson:"Export JSON",restore:"Restore",localAnalytics:"Local analytics",clearAnalytics:"Clear local analytics",works:"Works",addArtworkTitle:"Add artwork",editArtwork:"Edit artwork",chooseImage:"Choose image",artworkTitle:"Artwork title",year:"Year",description:"Description",price:"Price",publishNow:"Publish",cancel:"Cancel",save:"Save",newCategoryTitle:"New category",categoryName:"Category name",uncategorized:"Uncategorized",draft:"Draft",views:"views",edit:"Edit",unpublish:"Unpublish",publish:"Publish",delete:"Delete",noViews:"No views recorded yet.",noSource:"No source recorded yet.",ready:"Ready to connect",syncActive:"Active",saved:"Saved",viewRecorded:"View recorded",categoryAdded:"Category added",moveWorksFirst:"Move artworks from this category first.",confirmDeleteCategory:"Delete this category?",confirmDeleteWork:"Delete this artwork?",restoreDone:"Restore completed",invalidBackup:"Invalid backup file",analyticsCleared:"Analytics cleared",serverMissing:"Server URL is empty.",testing:"Testing…",connectionOk:"Connection successful.",connectionBad:"Server responded but not successfully.",connectionFailed:"Connection failed; offline mode remains available.",selectCategory:"Uncategorized",eventView:"View",eventSearch:"Search",eventEdit:"Edit",eventAdd:"Add",eventPublish:"Publish",eventDelete:"Delete",insideApp:"Inside app",changeLanguage:"Language changed"},
+ es:{tagline:"Portafolio artístico con inspiración persa",welcomeTitle:"Tu arte, presentado con personalidad",welcomeText:"Gestiona tu colección, revisa la interacción y prepara tu portafolio para crecer online.",dashboard:"Panel",refresh:"Actualizar",totalWorks:"Obras totales",published:"Publicadas",totalViews:"Visitas totales",todayViews:"Visitas de hoy",topWorks:"Obras más vistas",viewSources:"Origen de visitas",systemStatus:"Estado del sistema",offlineMode:"Modo sin conexión",active:"Activo",onlineSync:"Sincronización online",worksManagement:"Gestión de obras",addArtwork:"+ Añadir obra",searchWorks:"Buscar obras…",newest:"Más recientes",mostViewed:"Más vistas",title:"Título",noWorks:"Todavía no hay obras.",categories:"Categorías",newCategory:"+ Nueva categoría",analytics:"Estadísticas e informes",analyticsShort:"Estadísticas",exportCsv:"Exportar CSV",recordedViews:"Visitas registradas",searches:"Búsquedas",edits:"Ediciones",addedWorks:"Obras añadidas",recentEvents:"Eventos recientes",time:"Hora",type:"Tipo",artwork:"Obra",source:"Origen",analyticsNote:"Las estadísticas locales cuentan la actividad de este dispositivo. Conecta un servidor para recopilar visitas reales desde varios dispositivos.",settings:"Ajustes",language:"Idioma",enableSync:"Activar sincronización",serverUrl:"URL de la API del servidor",testConnection:"Probar conexión",offlineWorks:"Sin servidor, la app sigue funcionando completamente offline.",backupRestore:"Copia y restauración",exportJson:"Exportar JSON",restore:"Restaurar",localAnalytics:"Estadísticas locales",clearAnalytics:"Borrar estadísticas locales",works:"Obras",addArtworkTitle:"Añadir obra",editArtwork:"Editar obra",chooseImage:"Elegir imagen",artworkTitle:"Título de la obra",year:"Año",description:"Descripción",price:"Precio",publishNow:"Publicar",cancel:"Cancelar",save:"Guardar",newCategoryTitle:"Nueva categoría",categoryName:"Nombre de la categoría",uncategorized:"Sin categoría",draft:"Borrador",views:"visitas",edit:"Editar",unpublish:"Ocultar",publish:"Publicar",delete:"Eliminar",noViews:"Aún no hay visitas.",noSource:"Aún no hay orígenes registrados.",ready:"Listo para conectar",syncActive:"Activo",saved:"Guardado",viewRecorded:"Visita registrada",categoryAdded:"Categoría añadida",moveWorksFirst:"Primero mueve las obras de esta categoría.",confirmDeleteCategory:"¿Eliminar esta categoría?",confirmDeleteWork:"¿Eliminar esta obra?",restoreDone:"Restauración completada",invalidBackup:"Archivo de copia no válido",analyticsCleared:"Estadísticas borradas",serverMissing:"Falta la URL del servidor.",testing:"Probando…",connectionOk:"Conexión correcta.",connectionBad:"El servidor respondió con error.",connectionFailed:"No se pudo conectar; el modo offline sigue disponible.",selectCategory:"Sin categoría",eventView:"Visita",eventSearch:"Búsqueda",eventEdit:"Edición",eventAdd:"Añadir",eventPublish:"Publicar",eventDelete:"Eliminar",insideApp:"Dentro de la app",changeLanguage:"Idioma cambiado"},
+ fa:{tagline:"گالری هنری با الهام از هنر ایرانی",welcomeTitle:"هنر شما، با هویتی متمایز",welcomeText:"آثار خود را مدیریت کنید، بازدیدها را ببینید و گالری را برای توسعه آنلاین آماده نگه دارید.",dashboard:"داشبورد",refresh:"بروزرسانی",totalWorks:"کل آثار",published:"منتشرشده",totalViews:"کل بازدید",todayViews:"بازدید امروز",topWorks:"پربازدیدترین آثار",viewSources:"منبع بازدید",systemStatus:"وضعیت سیستم",offlineMode:"حالت آفلاین",active:"فعال",onlineSync:"همگام‌سازی آنلاین",worksManagement:"مدیریت آثار",addArtwork:"+ افزودن اثر",searchWorks:"جستجو در آثار…",newest:"جدیدترین",mostViewed:"پربازدیدترین",title:"عنوان",noWorks:"هنوز اثری اضافه نشده است.",categories:"دسته‌بندی‌ها",newCategory:"+ دسته جدید",analytics:"آمار و گزارش‌ها",analyticsShort:"آمار",exportCsv:"خروجی CSV",recordedViews:"بازدید ثبت‌شده",searches:"جستجوها",edits:"ویرایش‌ها",addedWorks:"آثار افزوده‌شده",recentEvents:"آخرین رویدادها",time:"زمان",type:"نوع",artwork:"اثر",source:"منبع",analyticsNote:"آمار محلی فعالیت همین دستگاه را ثبت می‌کند. برای آمار واقعی بازدیدکنندگان از چند دستگاه، سرور مرکزی را متصل کنید.",settings:"تنظیمات",language:"زبان",enableSync:"فعال‌سازی همگام‌سازی",serverUrl:"آدرس API سرور",testConnection:"آزمایش اتصال",offlineWorks:"بدون سرور نیز اپ به‌طور کامل آفلاین کار می‌کند.",backupRestore:"پشتیبان‌گیری و بازیابی",exportJson:"خروجی JSON",restore:"بازیابی",localAnalytics:"آمار محلی",clearAnalytics:"پاک‌کردن آمار محلی",works:"آثار",addArtworkTitle:"افزودن اثر",editArtwork:"ویرایش اثر",chooseImage:"انتخاب عکس",artworkTitle:"عنوان اثر",year:"سال",description:"توضیحات",price:"قیمت",publishNow:"منتشر شود",cancel:"انصراف",save:"ذخیره",newCategoryTitle:"دسته‌بندی جدید",categoryName:"نام دسته",uncategorized:"بدون دسته",draft:"پیش‌نویس",views:"بازدید",edit:"ویرایش",unpublish:"عدم انتشار",publish:"انتشار",delete:"حذف",noViews:"هنوز بازدیدی ثبت نشده.",noSource:"فعلاً منبعی ثبت نشده.",ready:"آماده اتصال",syncActive:"فعال",saved:"ذخیره شد",viewRecorded:"بازدید ثبت شد",categoryAdded:"دسته اضافه شد",moveWorksFirst:"ابتدا آثار این دسته را منتقل کنید.",confirmDeleteCategory:"این دسته حذف شود؟",confirmDeleteWork:"این اثر حذف شود؟",restoreDone:"بازیابی انجام شد",invalidBackup:"فایل پشتیبان معتبر نیست",analyticsCleared:"آمار پاک شد",serverMissing:"آدرس سرور وارد نشده است.",testing:"در حال آزمایش…",connectionOk:"اتصال موفق است.",connectionBad:"سرور پاسخ داد ولی وضعیت مناسب نیست.",connectionFailed:"اتصال برقرار نشد؛ حالت آفلاین همچنان فعال است.",selectCategory:"بدون دسته",eventView:"بازدید",eventSearch:"جستجو",eventEdit:"ویرایش",eventAdd:"افزودن",eventPublish:"انتشار",eventDelete:"حذف",insideApp:"داخل اپ",changeLanguage:"زبان تغییر کرد"}
+};
+
+const K={works:'ag2_works',cats:'ag2_cats',events:'ag2_events',settings:'ag2_settings',lang:'rangin_lang'};
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d))}catch(e){return d}};
-let works=load(K.works,[]),cats=load(K.cats,['نقاشی','طراحی','عکاسی']),events=load(K.events,[]),settings=load(K.settings,{sync:false,apiUrl:''});
-let editing=null,imageData='';
+let works=load(K.works,[]),cats=load(K.cats,[]),events=load(K.events,[]),settings=load(K.settings,{sync:false,apiUrl:''});
+let lang=localStorage.getItem(K.lang)||'',editing=null,imageData='';
+if(!cats.length) cats=['Painting','Drawing','Photography'];
+const t=k=>(I[lang||'en']||I.en)[k]||I.en[k]||k;
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
 const todayKey=()=>new Date().toISOString().slice(0,10);
 function persist(){localStorage.setItem(K.works,JSON.stringify(works));localStorage.setItem(K.cats,JSON.stringify(cats));localStorage.setItem(K.events,JSON.stringify(events.slice(-2000)));localStorage.setItem(K.settings,JSON.stringify(settings))}
-function toast(t){const x=$('#toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',2200)}
-function log(type,workId='',source='داخل اپ'){events.push({id:uid(),type,workId,source,time:Date.now(),day:todayKey()});persist();if(settings.sync)syncEvent(events[events.length-1])}
+function toast(x){const z=$('#toast');z.textContent=x;z.style.display='block';setTimeout(()=>z.style.display='none',2100)}
+function setLang(l,first=false){lang=l;localStorage.setItem(K.lang,l);document.documentElement.lang=l;document.documentElement.dir=l==='fa'?'rtl':'ltr';$$('[data-lang]').forEach(b=>b.classList.toggle('on',b.dataset.lang===l));$$('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));$$('[data-i18n-placeholder]').forEach(e=>e.placeholder=t(e.dataset.i18nPlaceholder));$('#langGate').classList.remove('show');renderAll();if(!first)toast(t('changeLanguage'))}
+if(!lang) $('#langGate').classList.add('show'); else setLang(lang,true);
+$$('[data-picklang]').forEach(b=>b.onclick=()=>setLang(b.dataset.picklang,true));
+$$('[data-lang]').forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
+$$('[data-setlang]').forEach(b=>b.onclick=()=>setLang(b.dataset.setlang));
+
+function log(type,workId='',source=''){events.push({id:uid(),type,workId,source:source||t('insideApp'),time:Date.now(),day:todayKey()});persist();if(settings.sync)syncEvent(events[events.length-1])}
 async function syncEvent(ev){if(!settings.apiUrl)return;try{await fetch(settings.apiUrl.replace(/\/$/,'')+'/events',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(ev)})}catch(e){}}
 function nav(p){$$('.page').forEach(x=>x.classList.toggle('on',x.id===p));$$('.nav button').forEach(x=>x.classList.toggle('on',x.dataset.page===p));renderAll()}
 $$('.nav button').forEach(b=>b.onclick=()=>nav(b.dataset.page));
-
 function viewCount(id){return events.filter(e=>e.type==='view'&&e.workId===id).length}
+function eventLabel(x){return ({view:t('eventView'),search:t('eventSearch'),edit:t('eventEdit'),add:t('eventAdd'),publish:t('eventPublish'),delete:t('eventDelete')})[x]||x}
 function renderDashboard(){
- $('#kWorks').textContent=works.length;$('#kPublished').textContent=works.filter(w=>w.published).length;
- const views=events.filter(e=>e.type==='view');$('#kViews').textContent=views.length;$('#kToday').textContent=views.filter(e=>e.day===todayKey()).length;
+ const views=events.filter(e=>e.type==='view');
+ $('#kWorks').textContent=works.length;$('#kPublished').textContent=works.filter(w=>w.published).length;$('#kViews').textContent=views.length;$('#kToday').textContent=views.filter(e=>e.day===todayKey()).length;
  $('#aViews').textContent=views.length;$('#aSearch').textContent=events.filter(e=>e.type==='search').length;$('#aEdits').textContent=events.filter(e=>e.type==='edit').length;$('#aAdds').textContent=events.filter(e=>e.type==='add').length;
- const ranked=works.map(w=>({...w,v:viewCount(w.id)})).sort((a,b)=>b.v-a.v).slice(0,5),max=Math.max(1,...ranked.map(x=>x.v));
- $('#topWorks').innerHTML=ranked.length?ranked.map(x=>'<div class="barrow"><span>'+esc(x.title)+'</span><div class="bar"><i style="width:'+Math.round(x.v/max*100)+'%"></i></div><b>'+x.v+'</b></div>').join(''):'<small>هنوز بازدیدی ثبت نشده.</small>';
- const src={};views.forEach(e=>src[e.source||'نامشخص']=(src[e.source||'نامشخص']||0)+1);const ss=Object.entries(src).sort((a,b)=>b[1]-a[1]),sm=Math.max(1,...ss.map(x=>x[1]));
- $('#sourceBars').innerHTML=ss.length?ss.map(x=>'<div class="barrow"><span>'+esc(x[0])+'</span><div class="bar"><i style="width:'+Math.round(x[1]/sm*100)+'%"></i></div><b>'+x[1]+'</b></div>').join(''):'<small>فعلاً منبعی ثبت نشده.</small>';
- $('#syncState').textContent=settings.sync&&settings.apiUrl?'فعال':'آماده اتصال';$('#syncState').style.color=settings.sync&&settings.apiUrl?'var(--good)':'var(--warn)';
+ const ranked=works.map(w=>({...w,v:viewCount(w.id)})).sort((a,b)=>b.v-a.v).slice(0,5),mx=Math.max(1,...ranked.map(x=>x.v));
+ $('#topWorks').innerHTML=ranked.length?ranked.map(x=>'<div class="barrow"><span>'+esc(x.title)+'</span><div class="bar"><i style="width:'+Math.round(x.v/mx*100)+'%"></i></div><b>'+x.v+'</b></div>').join(''):'<small>'+t('noViews')+'</small>';
+ const src={};views.forEach(e=>src[e.source||t('insideApp')]=(src[e.source||t('insideApp')]||0)+1);const ss=Object.entries(src).sort((a,b)=>b[1]-a[1]),sm=Math.max(1,...ss.map(x=>x[1]));
+ $('#sourceBars').innerHTML=ss.length?ss.map(x=>'<div class="barrow"><span>'+esc(x[0])+'</span><div class="bar"><i style="width:'+Math.round(x[1]/sm*100)+'%"></i></div><b>'+x[1]+'</b></div>').join(''):'<small>'+t('noSource')+'</small>';
+ $('#syncState').textContent=settings.sync&&settings.apiUrl?t('syncActive'):t('ready');$('#syncState').style.color=settings.sync&&settings.apiUrl?'var(--green)':'#946816';
 }
-function filteredWorks(){let a=[...works],q=$('#search').value.trim().toLowerCase();if(q){a=a.filter(w=>(w.title+' '+w.description+' '+w.category).toLowerCase().includes(q));}const s=$('#sort').value;if(s==='new')a.sort((a,b)=>b.created-a.created);if(s==='views')a.sort((a,b)=>viewCount(b.id)-viewCount(a.id));if(s==='title')a.sort((a,b)=>a.title.localeCompare(b.title,'fa'));return a}
-function renderWorks(){const a=filteredWorks(),g=$('#worksGrid');g.innerHTML='';$('#worksEmpty').hidden=!!a.length;a.forEach(w=>{const el=document.createElement('article');el.className='work';el.innerHTML='<div class="pic" data-view="'+w.id+'">'+(w.image?'<img src="'+w.image+'">':'🎨')+'</div><div class="wb"><div class="title">'+esc(w.title)+'</div><div class="meta">'+esc(w.category||'بدون دسته')+(w.year?' • '+esc(w.year):'')+' • '+viewCount(w.id)+' بازدید</div><span class="badge '+(w.published?'pub':'draft')+'">'+(w.published?'منتشرشده':'پیش‌نویس')+'</span><div class="actions"><button data-e="'+w.id+'">ویرایش</button><button data-t="'+w.id+'">'+(w.published?'عدم انتشار':'انتشار')+'</button><button data-d="'+w.id+'">حذف</button></div></div>';g.appendChild(el)});
- $$('[data-view]').forEach(x=>x.onclick=()=>{log('view',x.dataset.view,'داخل اپ');renderAll();toast('بازدید ثبت شد')});
- $$('[data-e]').forEach(x=>x.onclick=()=>openEdit(x.dataset.e));$$('[data-t]').forEach(x=>x.onclick=()=>togglePub(x.dataset.t));$$('[data-d]').forEach(x=>x.onclick=()=>removeWork(x.dataset.d))
+function filteredWorks(){let a=[...works],q=$('#search').value.trim().toLowerCase();if(q)a=a.filter(w=>(w.title+' '+w.description+' '+w.category).toLowerCase().includes(q));const s=$('#sort').value;if(s==='new')a.sort((a,b)=>b.created-a.created);if(s==='views')a.sort((a,b)=>viewCount(b.id)-viewCount(a.id));if(s==='title')a.sort((a,b)=>a.title.localeCompare(b.title,lang));return a}
+function renderWorks(){const a=filteredWorks(),g=$('#worksGrid');g.innerHTML='';$('#worksEmpty').hidden=!!a.length;a.forEach(w=>{const el=document.createElement('article');el.className='work';el.innerHTML='<div class="pic" data-view="'+w.id+'">'+(w.image?'<img src="'+w.image+'">':'✦')+'</div><div class="wb"><div class="title">'+esc(w.title)+'</div><div class="meta">'+esc(w.category||t('uncategorized'))+(w.year?' · '+esc(w.year):'')+' · '+viewCount(w.id)+' '+t('views')+'</div><span class="badge '+(w.published?'pub':'draft')+'">'+(w.published?t('published'):t('draft'))+'</span><div class="actions"><button data-e="'+w.id+'">'+t('edit')+'</button><button data-t="'+w.id+'">'+(w.published?t('unpublish'):t('publish'))+'</button><button data-d="'+w.id+'">'+t('delete')+'</button></div></div>';g.appendChild(el)});
+ $$('[data-view]').forEach(x=>x.onclick=()=>{log('view',x.dataset.view);renderAll();toast(t('viewRecorded'))});$$('[data-e]').forEach(x=>x.onclick=()=>openEdit(x.dataset.e));$$('[data-t]').forEach(x=>x.onclick=()=>togglePub(x.dataset.t));$$('[data-d]').forEach(x=>x.onclick=()=>removeWork(x.dataset.d))
 }
-function renderCategories(){const l=$('#categoryList');l.innerHTML=cats.map(c=>{const n=works.filter(w=>w.category===c).length;return '<div class="rowitem"><div><b>'+esc(c)+'</b><br><small>'+n+' اثر</small></div><button class="danger" data-cdel="'+esc(c)+'">حذف</button></div>'}).join('')||'<div class="empty">دسته‌ای وجود ندارد.</div>';$$('[data-cdel]').forEach(b=>b.onclick=()=>{const c=b.dataset.cdel;if(works.some(w=>w.category===c)){toast('ابتدا آثار این دسته را منتقل کن');return}if(confirm('این دسته حذف شود؟')){cats=cats.filter(x=>x!==c);persist();renderAll()}})}
-function renderEvents(){const b=$('#eventsBody'),last=[...events].reverse().slice(0,60);b.innerHTML=last.map(e=>{const w=works.find(x=>x.id===e.workId);return '<tr><td>'+new Date(e.time).toLocaleString('fa-IR')+'</td><td>'+esc(e.type)+'</td><td>'+esc(w?.title||'-')+'</td><td>'+esc(e.source||'-')+'</td></tr>'}).join('')||'<tr><td colspan="4">رویدادی ثبت نشده.</td></tr>'}
+function renderCategories(){const l=$('#categoryList');l.innerHTML=cats.map(c=>'<div class="rowitem"><div><b>'+esc(c)+'</b><br><small>'+works.filter(w=>w.category===c).length+' '+t('works')+'</small></div><button class="danger" data-cdel="'+esc(c)+'">'+t('delete')+'</button></div>').join('')||'<div class="empty">'+t('noWorks')+'</div>';$$('[data-cdel]').forEach(b=>b.onclick=()=>{const c=b.dataset.cdel;if(works.some(w=>w.category===c)){toast(t('moveWorksFirst'));return}if(confirm(t('confirmDeleteCategory'))){cats=cats.filter(x=>x!==c);persist();renderAll()}})}
+function renderEvents(){const b=$('#eventsBody'),last=[...events].reverse().slice(0,60);b.innerHTML=last.map(e=>{const w=works.find(x=>x.id===e.workId);return '<tr><td>'+new Date(e.time).toLocaleString(lang==='fa'?'fa-IR':lang==='es'?'es-ES':'en-GB')+'</td><td>'+esc(eventLabel(e.type))+'</td><td>'+esc(w?.title||'-')+'</td><td>'+esc(e.source||'-')+'</td></tr>'}).join('')||'<tr><td colspan="4">—</td></tr>'}
 function renderSettings(){$('#syncEnabled').checked=!!settings.sync;$('#apiUrl').value=settings.apiUrl||''}
-function renderAll(){renderDashboard();renderWorks();renderCategories();renderEvents();renderSettings();fillCats()}
-function fillCats(){const s=$('#category'),v=s.value;s.innerHTML='<option value="">بدون دسته</option>'+cats.map(c=>'<option>'+esc(c)+'</option>').join('');if([...s.options].some(o=>o.value===v))s.value=v}
-function resetForm(){editing=null;imageData='';$('#workForm').reset();$('#published').checked=true;$('#preview').style.display='none';$('#preview').src='';$('#modalTitle').textContent='افزودن اثر';fillCats()}
+function fillCats(){const s=$('#category'),v=s.value;s.innerHTML='<option value="">'+t('selectCategory')+'</option>'+cats.map(c=>'<option>'+esc(c)+'</option>').join('');if([...s.options].some(o=>o.value===v))s.value=v}
+function renderAll(){if(!lang)return;$$('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));$$('[data-i18n-placeholder]').forEach(e=>e.placeholder=t(e.dataset.i18nPlaceholder));renderDashboard();renderWorks();renderCategories();renderEvents();renderSettings();fillCats()}
+function resetForm(){editing=null;imageData='';$('#workForm').reset();$('#published').checked=true;$('#preview').style.display='none';$('#preview').src='';$('#modalTitle').textContent=t('addArtworkTitle');fillCats()}
 function openNew(){resetForm();$('#workModal').classList.add('show')}
-function openEdit(id){const w=works.find(x=>x.id===id);if(!w)return;editing=id;imageData=w.image||'';$('#modalTitle').textContent='ویرایش اثر';$('#title').value=w.title;$('#category').value=w.category||'';$('#year').value=w.year||'';$('#description').value=w.description||'';$('#price').value=w.price||'';$('#currency').value=w.currency||'€';$('#published').checked=!!w.published;if(imageData){$('#preview').src=imageData;$('#preview').style.display='block'}$('#workModal').classList.add('show')}
+function openEdit(id){const w=works.find(x=>x.id===id);if(!w)return;editing=id;imageData=w.image||'';$('#modalTitle').textContent=t('editArtwork');$('#title').value=w.title;$('#category').value=w.category||'';$('#year').value=w.year||'';$('#description').value=w.description||'';$('#price').value=w.price||'';$('#currency').value=w.currency||'€';$('#published').checked=!!w.published;if(imageData){$('#preview').src=imageData;$('#preview').style.display='block'}$('#workModal').classList.add('show')}
 function togglePub(id){works=works.map(w=>w.id===id?{...w,published:!w.published}:w);log('publish',id);renderAll()}
-function removeWork(id){if(confirm('این اثر حذف شود؟')){works=works.filter(w=>w.id!==id);log('delete',id);renderAll()}}
+function removeWork(id){if(confirm(t('confirmDeleteWork'))){works=works.filter(w=>w.id!==id);log('delete',id);renderAll()}}
 async function imageToData(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const max=1600,sc=Math.min(1,max/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*sc);cv.height=Math.round(im.height*sc);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);resolve(cv.toDataURL('image/jpeg',.82))};im.onerror=reject;im.src=r.result};r.onerror=reject;r.readAsDataURL(file)})}
-$('#image').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{imageData=await imageToData(f);$('#preview').src=imageData;$('#preview').style.display='block'}catch(e){toast('خواندن عکس انجام نشد')}};
-$('#workForm').onsubmit=e=>{e.preventDefault();const old=works.find(x=>x.id===editing),w={id:editing||uid(),title:$('#title').value.trim(),category:$('#category').value,year:$('#year').value.trim(),description:$('#description').value.trim(),price:$('#price').value.trim(),currency:$('#currency').value,image:imageData,published:$('#published').checked,created:old?.created||Date.now()};if(editing){works=works.map(x=>x.id===editing?w:x);log('edit',w.id)}else{works.push(w);log('add',w.id)}persist();$('#workModal').classList.remove('show');resetForm();renderAll();toast('ذخیره شد')};
-$('#search').oninput=()=>{if($('#search').value.trim().length>1)log('search','',$('#search').value.trim());renderWorks()};$('#sort').onchange=renderWorks;
-$('#quickAdd').onclick=openNew;$('#addWork').onclick=openNew;$('#cancelWork').onclick=()=>$('#workModal').classList.remove('show');
-$('#addCategory').onclick=()=>$('#categoryModal').classList.add('show');$('#cancelCategory').onclick=()=>$('#categoryModal').classList.remove('show');$('#categoryForm').onsubmit=e=>{e.preventDefault();const n=$('#categoryName').value.trim();if(n&&!cats.includes(n)){cats.push(n);persist();renderAll();toast('دسته اضافه شد')}$('#categoryName').value='';$('#categoryModal').classList.remove('show')};
+$('#image').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{imageData=await imageToData(f);$('#preview').src=imageData;$('#preview').style.display='block'}catch(e){}};
+$('#workForm').onsubmit=e=>{e.preventDefault();const old=works.find(x=>x.id===editing),w={id:editing||uid(),title:$('#title').value.trim(),category:$('#category').value,year:$('#year').value.trim(),description:$('#description').value.trim(),price:$('#price').value.trim(),currency:$('#currency').value,image:imageData,published:$('#published').checked,created:old?.created||Date.now()};if(editing){works=works.map(x=>x.id===editing?w:x);log('edit',w.id)}else{works.push(w);log('add',w.id)}persist();$('#workModal').classList.remove('show');resetForm();renderAll();toast(t('saved'))};
+let searchTimer;$('#search').oninput=()=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{if($('#search').value.trim().length>1)log('search','',$('#search').value.trim())},600);renderWorks()};$('#sort').onchange=renderWorks;
+$('#addWork').onclick=openNew;$('#cancelWork').onclick=()=>$('#workModal').classList.remove('show');
+$('#addCategory').onclick=()=>$('#categoryModal').classList.add('show');$('#cancelCategory').onclick=()=>$('#categoryModal').classList.remove('show');$('#categoryForm').onsubmit=e=>{e.preventDefault();const n=$('#categoryName').value.trim();if(n&&!cats.includes(n)){cats.push(n);persist();renderAll();toast(t('categoryAdded'))}$('#categoryName').value='';$('#categoryModal').classList.remove('show')};
 $('#refreshDash').onclick=renderDashboard;
 $('#syncEnabled').onchange=()=>{settings.sync=$('#syncEnabled').checked;persist();renderDashboard()};$('#apiUrl').onchange=()=>{settings.apiUrl=$('#apiUrl').value.trim();persist();renderDashboard()};
-$('#testSync').onclick=async()=>{settings.apiUrl=$('#apiUrl').value.trim();settings.sync=$('#syncEnabled').checked;persist();const m=$('#syncMsg');if(!settings.apiUrl){m.textContent='آدرس سرور وارد نشده.';return}m.textContent='در حال آزمایش…';try{const r=await fetch(settings.apiUrl.replace(/\/$/,'')+'/health');m.textContent=r.ok?'اتصال موفق است.':'سرور پاسخ داد ولی وضعیت مناسب نیست.'}catch(e){m.textContent='اتصال برقرار نشد؛ اپ همچنان آفلاین کار می‌کند.'}};
+$('#testSync').onclick=async()=>{settings.apiUrl=$('#apiUrl').value.trim();settings.sync=$('#syncEnabled').checked;persist();const m=$('#syncMsg');if(!settings.apiUrl){m.textContent=t('serverMissing');return}m.textContent=t('testing');try{const r=await fetch(settings.apiUrl.replace(/\/$/,'')+'/health');m.textContent=r.ok?t('connectionOk'):t('connectionBad')}catch(e){m.textContent=t('connectionFailed')}};
 function download(name,text,type='application/json'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-$('#backup').onclick=()=>download('art-gallery-backup.json',JSON.stringify({version:2,works,cats,events,settings},null,2));
-$('#restore').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{const d=JSON.parse(await f.text());works=Array.isArray(d.works)?d.works:works;cats=Array.isArray(d.cats)?d.cats:cats;events=Array.isArray(d.events)?d.events:events;settings=d.settings||settings;persist();renderAll();toast('بازیابی انجام شد')}catch(err){toast('فایل پشتیبان معتبر نیست')}};
-$('#exportCsv').onclick=()=>{const rows=[['time','type','work','source'],...events.map(e=>[new Date(e.time).toISOString(),e.type,works.find(w=>w.id===e.workId)?.title||'',e.source||''])];download('analytics.csv',rows.map(r=>r.map(x=>'"'+String(x).replaceAll('"','""')+'"').join(',')).join('\n'),'text/csv')};
-$('#clearAnalytics').onclick=()=>{if(confirm('همه آمار محلی پاک شود؟')){events=[];persist();renderAll();toast('آمار پاک شد')}};
+$('#backup').onclick=()=>download('rangin-gallery-backup.json',JSON.stringify({version:3,works,cats,events,settings,lang},null,2));
+$('#restore').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{const d=JSON.parse(await f.text());works=Array.isArray(d.works)?d.works:works;cats=Array.isArray(d.cats)?d.cats:cats;events=Array.isArray(d.events)?d.events:events;settings=d.settings||settings;persist();renderAll();toast(t('restoreDone'))}catch(err){toast(t('invalidBackup'))}};
+$('#exportCsv').onclick=()=>{const rows=[['time','type','work','source'],...events.map(e=>[new Date(e.time).toISOString(),e.type,works.find(w=>w.id===e.workId)?.title||'',e.source||''])];download('rangin-analytics.csv',rows.map(r=>r.map(x=>'"'+String(x).replaceAll('"','""')+'"').join(',')).join('\n'),'text/csv')};
+$('#clearAnalytics').onclick=()=>{if(confirm(t('clearAnalytics')+'?')){events=[];persist();renderAll();toast(t('analyticsCleared'))}};
 $('#workModal').onclick=e=>{if(e.target.id==='workModal')e.currentTarget.classList.remove('show')};$('#categoryModal').onclick=e=>{if(e.target.id==='categoryModal')e.currentTarget.classList.remove('show')};
-renderAll();
+if(lang) renderAll();
 </script>
 </body></html>
