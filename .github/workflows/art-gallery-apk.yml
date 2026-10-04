@@ -1,4 +1,4 @@
-name: Build and Publish Rangin Gallery APK
+name: Build and Publish Rangin Gallery Final APK
 
 on:
   push:
@@ -42,16 +42,16 @@ jobs:
         with:
           gradle-version: "8.9"
 
-      - name: Build APK
+      - name: Build Final APK
         working-directory: art-gallery-android
         run: gradle --no-daemon assembleDebug
 
       - name: Prepare APK
-        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk Rangin-Gallery-v3.6.apk
+        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk Rangin-Gallery-FINAL-v4.0.apk
 
-      - name: Publish release
+      - name: Publish final release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete rangin-gallery-v3.6 --cleanup-tag -y || true
-          gh release create rangin-gallery-v3.6 Rangin-Gallery-v3.6.apk --title "Rangin Gallery v3.6" --notes "Artwork inventory status, technique and dimensions, permanent catalog numbers, Certificate of Authenticity with QR, native Android PDF printing for certificates/catalogs/portfolio, native sharing, exhibition mode, favorites, inquiries, artist profile, trilingual UI, Persian-inspired design. Same final package ID app.rangingallery.mobile and stable signing key as v3.5."
+          gh release delete rangin-gallery-final-v4.0 --cleanup-tag -y || true
+          gh release create rangin-gallery-final-v4.0 Rangin-Gallery-FINAL-v4.0.apk             --title "Rangin Gallery FINAL v4.0"             --notes "Main production baseline. Persian-inspired trilingual art portfolio and management suite. Includes advanced artwork metadata and multi-image support, collections, multi-artist profiles, exhibition and presentation modes, favorites, inquiries, CRM, sales, invoices, commissions, payment-link configuration, certificates with QR, PDF catalog/portfolio, comments and ratings, newsletter, VIP works, smart search, similar works, AI endpoint integration, online sync configuration, analytics dashboard, security PIN, biometric authentication, screenshot protection, kiosk mode, themes, event calendar/maps, watermarking, backups, and web/admin integration settings. Package ID: app.rangingallery.mobile. Stable signing baseline for future updates."
