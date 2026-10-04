@@ -47,11 +47,11 @@ jobs:
         run: gradle --no-daemon assembleDebug
 
       - name: Prepare APK
-        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk Rangin-Gallery-v3.5-CLEAN.apk
+        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk Rangin-Gallery-v3.6.apk
 
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete rangin-gallery-v3.5-clean --cleanup-tag -y || true
-          gh release create rangin-gallery-v3.5-clean Rangin-Gallery-v3.5-CLEAN.apk --title "Rangin Gallery v3.5 Clean" --notes "Final clean Android package baseline: app.rangingallery.mobile. Stable signing key. Includes exhibition mode, favorites, inquiries, artist profile, featured collection, Persian-inspired design, and English/Spanish/Persian UI. Future releases will update this package in place."
+          gh release delete rangin-gallery-v3.6 --cleanup-tag -y || true
+          gh release create rangin-gallery-v3.6 Rangin-Gallery-v3.6.apk --title "Rangin Gallery v3.6" --notes "Artwork inventory status, technique and dimensions, permanent catalog numbers, Certificate of Authenticity with QR, native Android PDF printing for certificates/catalogs/portfolio, native sharing, exhibition mode, favorites, inquiries, artist profile, trilingual UI, Persian-inspired design. Same final package ID app.rangingallery.mobile and stable signing key as v3.5."
