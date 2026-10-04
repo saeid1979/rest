@@ -8,10 +8,15 @@ const V4DEFAULT={
   notifications:[], payments:{stripe:'',paypal:'',redsys:'',inPerson:true}, web:{publicUrl:'',adminUrl:'',syncUrl:''},
   ai:{endpoint:''}, security:{pin:'',kiosk:false,protect:false}, theme:'miniature', autoBackup:false, vipPin:'', shareCount:{}
 };
-let v4=(()=>{try{return Object.assign({},V4DEFAULT,JSON.parse(localStorage.getItem(V4K)||'{}'))}catch(e){return JSON.parse(JSON.stringify(V4DEFAULT))}})();
+let v4=(()=>{try{
+  let raw='';
+  try{if(window.AndroidBridge&&AndroidBridge.loadData)raw=AndroidBridge.loadData('pro')||''}catch(e){}
+  const saved=raw?JSON.parse(raw):JSON.parse(localStorage.getItem(V4K)||'{}');
+  return Object.assign({},V4DEFAULT,saved);
+}catch(e){return JSON.parse(JSON.stringify(V4DEFAULT))}})();
 ['clients','sales','commissions','exhibitions','comments','newsletter','artists','collections','notifications'].forEach(k=>{if(!Array.isArray(v4[k]))v4[k]=[]});
 v4.payments=Object.assign({},V4DEFAULT.payments,v4.payments||{});v4.web=Object.assign({},V4DEFAULT.web,v4.web||{});v4.ai=Object.assign({},V4DEFAULT.ai,v4.ai||{});v4.security=Object.assign({},V4DEFAULT.security,v4.security||{});
-const save4=()=>localStorage.setItem(V4K,JSON.stringify(v4));
+const save4=()=>{const raw=JSON.stringify(v4);try{localStorage.setItem(V4K,raw)}catch(e){}try{if(window.AndroidBridge&&AndroidBridge.saveData)AndroidBridge.saveData('pro',raw)}catch(e){}};
 const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
 const id=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const tx=(en,es,fa)=>lang==='fa'?fa:lang==='es'?es:en;
