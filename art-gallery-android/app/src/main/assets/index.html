@@ -139,6 +139,19 @@ input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 
 .guestInfo{padding:10px}.guestInfo b{display:block;color:var(--lapis2)}.guestInfo small{color:var(--muted);font-size:10px}.heart{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:1px solid #ffffffbb;background:#fffdf4e8;color:#9c3341;font-size:18px;display:grid;place-items:center;box-shadow:0 4px 10px #0002}.heart.on{background:#9c3341;color:#fff}
 .inquiryList{display:grid;gap:7px}.inquiryItem{border:1px solid #dfd1b5;background:#fffdf7;border-radius:13px;padding:10px}.inquiryItem b{color:var(--lapis2)}.inquiryItem small{color:var(--muted);display:block;margin-top:3px}.inquiryItem p{font-size:12px;line-height:1.7;margin:6px 0 0}
 .inquiryFab{position:fixed;right:18px;bottom:24px;z-index:5;border:0;border-radius:999px;padding:12px 15px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#2b2117;font-weight:900;box-shadow:0 10px 24px #0003}
+
+.statusBadge{display:inline-block;border-radius:99px;padding:4px 8px;font-size:10px;font-weight:900;margin-inline-start:5px}
+.status-available{background:#e2f3e9;color:#246447}.status-reserved{background:#fff0ce;color:#8a5a09}.status-sold{background:#f4e4e7;color:#8f3040}.status-onloan{background:#e5edf8;color:#244f88}
+.certPaper{background:#fffdf7;border:3px double var(--gold);border-radius:18px;padding:18px;text-align:center;position:relative;overflow:hidden}.certPaper:before{content:"";position:absolute;inset:8px;border:1px solid #159c9b55;border-radius:12px;pointer-events:none}.certPaper>*{position:relative}.certTitle{font-family:Georgia,serif;color:var(--lapis);font-size:24px;margin:5px 0}.certSub{font-size:12px;color:var(--muted)}.certInfo{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:start;margin-top:14px}.certInfo div{border-bottom:1px solid #dfd1b5;padding:7px 3px;font-size:12px}.certQr{width:170px;height:170px;object-fit:contain;margin:12px auto 0;background:white;padding:6px;border:1px solid #ddd}.printOnly{display:none}
+.catalogTools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+@media print{
+ body *{visibility:hidden!important}
+ #printArea,#printArea *{visibility:visible!important}
+ #printArea{display:block!important;visibility:visible!important;position:absolute;left:0;top:0;width:100%;background:white;color:#111;padding:18px}
+ #printArea .printItem{page-break-inside:avoid;margin-bottom:18px;border-bottom:1px solid #bbb;padding-bottom:14px}
+ #printArea img{max-width:100%;height:auto}
+}
+
 @media(min-width:700px){.guestGrid{grid-template-columns:repeat(4,1fr)}}
 
 @media(min-width:700px){.kpis{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}.modal{align-items:center;justify-content:center}.sheet{max-width:680px;border-radius:25px}.langmini button{padding:7px 11px}}
@@ -232,7 +245,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 
 
  <div class="card"><h3 data-i18n="language">Language</h3><div class="langChoices"><button data-setlang="en">English</button><button data-setlang="es">Español</button><button data-setlang="fa">فارسی</button></div></div>
  <div class="card"><h3 data-i18n="onlineSync">Online sync</h3><div class="switch"><span data-i18n="enableSync">Enable sync</span><input type="checkbox" id="syncEnabled"></div><input id="apiUrl" data-i18n-placeholder="serverUrl" placeholder="Server API URL"><button class="soft" id="testSync" style="margin-top:8px;width:100%" data-i18n="testConnection">Test connection</button><small id="syncMsg" style="display:block;color:var(--muted);margin-top:7px" data-i18n="offlineWorks">Without a server the app still works fully offline.</small></div>
- <div class="card"><h3 data-i18n="backupRestore">Backup & restore</h3><div class="twocol"><button class="soft" id="backup" data-i18n="exportJson">Export JSON</button><label class="soft" style="padding:10px;text-align:center;border-radius:13px;font-weight:800"><span data-i18n="restore">Restore</span><input hidden id="restore" type="file" accept=".json,application/json"></label></div></div>
+ <div class="card"><h3 data-i18n="backupRestore">Backup & restore</h3><div class="twocol"><button class="soft" id="backup" data-i18n="exportJson">Export JSON</button><label class="soft" style="padding:10px;text-align:center;border-radius:13px;font-weight:800"><span data-i18n="restore">Restore</span><input hidden id="restore" type="file" accept=".json,application/json"></label></div><div class="catalogTools"><button class="goldbtn" id="printCatalog" data-i18n="pdfCatalog">PDF Catalog</button><button class="soft" id="printPortfolio" data-i18n="portfolioPdf">Portfolio PDF</button></div></div>
  <div class="card"><h3 data-i18n="localAnalytics">Local analytics</h3><button class="danger" id="clearAnalytics" style="width:100%" data-i18n="clearAnalytics">Clear local analytics</button></div>
 </section>
 </main>
@@ -250,6 +263,8 @@ input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 
  <div class="picker"><label class="soft" style="display:inline-block;padding:9px 12px;border-radius:11px" for="image" data-i18n="chooseImage">Choose image</label><input hidden type="file" id="image" accept="image/*"><img id="preview" class="preview"></div>
  <input required id="title" data-i18n-placeholder="artworkTitle" placeholder="Artwork title">
  <div class="twocol"><select id="category"></select><input id="year" inputmode="numeric" data-i18n-placeholder="year" placeholder="Year"></div>
+ <div class="twocol"><input id="technique" data-i18n-placeholder="technique" placeholder="Technique"><input id="dimensions" data-i18n-placeholder="dimensions" placeholder="Dimensions"></div>
+ <div class="twocol"><input id="catalogNo" data-i18n-placeholder="catalogNo" placeholder="Catalog no."><select id="inventoryStatus"><option value="available" data-i18n="statusAvailable">Available</option><option value="reserved" data-i18n="statusReserved">Reserved</option><option value="sold" data-i18n="statusSold">Sold</option><option value="onloan" data-i18n="statusOnLoan">On loan</option></select></div>
  <textarea id="description" rows="4" data-i18n-placeholder="description" placeholder="Description"></textarea>
  <div class="twocol"><input id="price" inputmode="decimal" data-i18n-placeholder="price" placeholder="Price"><select id="currency"><option>€</option><option>$</option><option>تومان</option></select></div>
  <div class="switch"><span data-i18n="featured">Featured artwork</span><input type="checkbox" id="featured"></div>
@@ -301,6 +316,15 @@ input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 
   </form>
 </div></div>
 
+
+<div class="modal" id="certificateModal"><div class="sheet">
+  <div class="section-title"><h2 data-i18n="certificateTitle">Certificate of Authenticity</h2><button class="soft" id="closeCertificate" data-i18n="close">Close</button></div>
+  <div class="ornament"></div>
+  <div id="certificatePaper" class="certPaper"></div>
+  <div class="foot" style="margin-top:12px"><button class="goldbtn" id="printCertificate" data-i18n="savePdf">Save / Print PDF</button><button class="soft" id="shareCertificate" data-i18n="shareCertificate">Share certificate</button></div>
+</div></div>
+<div id="printArea" class="printOnly"></div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -311,6 +335,11 @@ const I={
 };
 
 
+
+
+Object.assign(I.en,{technique:"Technique",dimensions:"Dimensions",catalogNo:"Catalog no.",statusAvailable:"Available",statusReserved:"Reserved",statusSold:"Sold",statusOnLoan:"On loan",certificateTitle:"Certificate of Authenticity",savePdf:"Save / Print PDF",shareCertificate:"Share certificate",certificate:"Certificate",pdfCatalog:"PDF Catalog",portfolioPdf:"Portfolio PDF",authenticArtwork:"This certifies that this artwork is an original work.",artist:"Artist",catalog:"Catalog",status:"Status"});
+Object.assign(I.es,{technique:"Técnica",dimensions:"Dimensiones",catalogNo:"N.º de catálogo",statusAvailable:"Disponible",statusReserved:"Reservada",statusSold:"Vendida",statusOnLoan:"En préstamo",certificateTitle:"Certificado de autenticidad",savePdf:"Guardar / Imprimir PDF",shareCertificate:"Compartir certificado",certificate:"Certificado",pdfCatalog:"Catálogo PDF",portfolioPdf:"Portafolio PDF",authenticArtwork:"Se certifica que esta obra es una obra original.",artist:"Artista",catalog:"Catálogo",status:"Estado"});
+Object.assign(I.fa,{technique:"تکنیک",dimensions:"ابعاد",catalogNo:"شماره کاتالوگ",statusAvailable:"موجود",statusReserved:"رزرو شده",statusSold:"فروخته شده",statusOnLoan:"امانت نمایشگاه",certificateTitle:"گواهی اصالت اثر",savePdf:"ذخیره / چاپ PDF",shareCertificate:"اشتراک گواهی",certificate:"گواهی اصالت",pdfCatalog:"کاتالوگ PDF",portfolioPdf:"پورتفولیو PDF",authenticArtwork:"گواهی می‌شود این اثر، اثر اصیل و اصلی هنرمند است.",artist:"هنرمند",catalog:"کاتالوگ",status:"وضعیت"});
 
 Object.assign(I.en,{exhibition:"Exhibition",exhibitionMode:"Exhibition mode",backAdmin:"Back to admin",searchGallery:"Search gallery…",all:"All",favorites:"Favorites",inquiries:"Inquiries",recentInquiries:"Recent inquiries",noInquiries:"No inquiries yet.",sendInquiry:"Ask about this artwork",yourName:"Your name",yourContact:"Email / phone / social",yourMessage:"Your message",send:"Send",inquirySaved:"Inquiry saved",askAbout:"Ask about artwork"});
 Object.assign(I.es,{exhibition:"Exposición",exhibitionMode:"Modo exposición",backAdmin:"Volver a administración",searchGallery:"Buscar en la galería…",all:"Todas",favorites:"Favoritos",inquiries:"Consultas",recentInquiries:"Consultas recientes",noInquiries:"Todavía no hay consultas.",sendInquiry:"Preguntar por esta obra",yourName:"Tu nombre",yourContact:"Email / teléfono / red social",yourMessage:"Tu mensaje",send:"Enviar",inquirySaved:"Consulta guardada",askAbout:"Preguntar por la obra"});
@@ -405,22 +434,39 @@ function renderDashboard(){
  $('#syncState').textContent=settings.sync&&settings.apiUrl?t('syncActive'):t('ready');$('#syncState').style.color=settings.sync&&settings.apiUrl?'var(--green)':'#946816';renderInquiries();
 }
 function filteredWorks(){let a=[...works],q=$('#search').value.trim().toLowerCase();if(q)a=a.filter(w=>(w.title+' '+w.description+' '+w.category).toLowerCase().includes(q));const s=$('#sort').value;if(s==='new')a.sort((a,b)=>b.created-a.created);if(s==='views')a.sort((a,b)=>viewCount(b.id)-viewCount(a.id));if(s==='title')a.sort((a,b)=>a.title.localeCompare(b.title,lang));return a}
-function renderWorks(){const a=filteredWorks(),g=$('#worksGrid');g.innerHTML='';$('#worksEmpty').hidden=!!a.length;a.forEach(w=>{const el=document.createElement('article');el.className='work';el.innerHTML='<div class="pic" data-view="'+w.id+'">'+(w.image?'<img src="'+w.image+'">':'✦')+'</div><div class="wb"><div class="title">'+esc(w.title)+'</div><div class="meta">'+esc(w.category||t('uncategorized'))+(w.year?' · '+esc(w.year):'')+' · '+viewCount(w.id)+' '+t('views')+'</div><span class="badge '+(w.published?'pub':'draft')+'">'+(w.published?t('published'):t('draft'))+'</span><div class="actions"><button data-e="'+w.id+'">'+t('edit')+'</button><button data-t="'+w.id+'">'+(w.published?t('unpublish'):t('publish'))+'</button><button data-d="'+w.id+'">'+t('delete')+'</button></div></div>';g.appendChild(el)});
- $$('[data-view]').forEach(x=>x.onclick=()=>{log('view',x.dataset.view);renderAll();toast(t('viewRecorded'))});$$('[data-e]').forEach(x=>x.onclick=()=>openEdit(x.dataset.e));$$('[data-t]').forEach(x=>x.onclick=()=>togglePub(x.dataset.t));$$('[data-d]').forEach(x=>x.onclick=()=>removeWork(x.dataset.d))
+
+function statusLabel(v){return ({available:t('statusAvailable'),reserved:t('statusReserved'),sold:t('statusSold'),onloan:t('statusOnLoan')})[v||'available']||t('statusAvailable')}
+function ensureCatalogNo(w){if(w.catalogNo)return w.catalogNo;const d=new Date(w.created||Date.now());return 'RG-'+d.getFullYear()+'-'+String(w.created||Date.now()).slice(-6)}
+function makeCatalogNo(){return 'RG-'+new Date().getFullYear()+'-'+String(Date.now()).slice(-6)}
+function qrUrl(text){return 'https://quickchart.io/qr?size=220&margin=1&text='+encodeURIComponent(text)}
+let certificateWorkId='';
+function certificateHtml(w){
+ const a=settings.artist||{},code=ensureCatalogNo(w),qr='RANGIN|'+code+'|'+(w.title||'')+'|'+(w.year||'');
+ return '<div class="bigRosette" style="width:74px;height:74px"><span>✦</span></div><div class="certTitle">Rangin Gallery</div><div class="certSub">'+t('certificateTitle')+'</div><p style="font-size:12px;line-height:1.8">'+t('authenticArtwork')+'</p><h2 style="color:var(--lapis)">'+esc(w.title||'')+'</h2><div class="certInfo"><div><b>'+t('artist')+':</b> '+esc(a.name||'Rangin Artist')+'</div><div><b>'+t('catalog')+':</b> '+esc(code)+'</div><div><b>'+t('year')+':</b> '+esc(w.year||'-')+'</div><div><b>'+t('technique')+':</b> '+esc(w.technique||'-')+'</div><div><b>'+t('dimensions')+':</b> '+esc(w.dimensions||'-')+'</div><div><b>'+t('status')+':</b> '+esc(statusLabel(w.inventoryStatus))+'</div></div><img class="certQr" src="'+qrUrl(qr)+'"><div class="certSub">'+esc(code)+'</div>';
+}
+function openCertificate(id){const w=works.find(x=>x.id===id);if(!w)return;certificateWorkId=id;$('#certificatePaper').innerHTML=certificateHtml(w);$('#certificateModal').classList.add('show')}
+function buildCatalogHtml(portfolio=false){
+ const a=settings.artist||{},arr=works.filter(w=>portfolio?w.published:true);
+ return '<div style="font-family:Arial,sans-serif"><div style="text-align:center;border-bottom:3px solid #c99a3c;padding-bottom:14px"><h1>Rangin Gallery</h1><h2>'+esc(a.name||'Rangin Artist')+'</h2><p>'+esc(a.bio||'')+'</p></div>'+arr.map(w=>'<div class="printItem"><h2>'+esc(w.title||'')+'</h2>'+(w.image?'<img src="'+w.image+'" style="max-height:420px;object-fit:contain">':'')+'<p><b>'+t('catalog')+':</b> '+esc(ensureCatalogNo(w))+' &nbsp; <b>'+t('year')+':</b> '+esc(w.year||'-')+'</p><p><b>'+t('technique')+':</b> '+esc(w.technique||'-')+' &nbsp; <b>'+t('dimensions')+':</b> '+esc(w.dimensions||'-')+'</p><p><b>'+t('status')+':</b> '+esc(statusLabel(w.inventoryStatus))+'</p><p>'+esc(w.description||'')+'</p></div>').join('')+'</div>';
+}
+function nativePrint(name){try{if(window.AndroidBridge&&AndroidBridge.printPage){AndroidBridge.printPage(name);return}}catch(e){}window.print()}
+
+function renderWorks(){const a=filteredWorks(),g=$('#worksGrid');g.innerHTML='';$('#worksEmpty').hidden=!!a.length;a.forEach(w=>{const el=document.createElement('article');el.className='work';el.innerHTML='<div class="pic" data-view="'+w.id+'">'+(w.image?'<img src="'+w.image+'">':'✦')+'</div><div class="wb"><div class="title">'+esc(w.title)+'</div><div class="meta">'+esc(w.category||t('uncategorized'))+(w.year?' · '+esc(w.year):'')+(w.technique?' · '+esc(w.technique):'')+' · '+viewCount(w.id)+' '+t('views')+'</div><div><span class="badge '+(w.published?'pub':'draft')+'">'+(w.published?t('published'):t('draft'))+'</span><span class="statusBadge status-'+(w.inventoryStatus||'available')+'">'+statusLabel(w.inventoryStatus)+'</span></div><div class="actions"><button data-e="'+w.id+'">'+t('edit')+'</button><button data-cert="'+w.id+'">'+t('certificate')+'</button><button data-t="'+w.id+'">'+(w.published?t('unpublish'):t('publish'))+'</button><button data-d="'+w.id+'">'+t('delete')+'</button></div></div>';g.appendChild(el)});
+ $$('[data-view]').forEach(x=>x.onclick=()=>{log('view',x.dataset.view);renderAll();toast(t('viewRecorded'))});$('[data-e]').forEach(x=>x.onclick=()=>openEdit(x.dataset.e));$('[data-cert]').forEach(x=>x.onclick=()=>openCertificate(x.dataset.cert));$('[data-t]').forEach(x=>x.onclick=()=>togglePub(x.dataset.t));$$('[data-d]').forEach(x=>x.onclick=()=>removeWork(x.dataset.d))
 }
 function renderCategories(){const l=$('#categoryList');l.innerHTML=cats.map(c=>'<div class="rowitem"><div><b>'+esc(c)+'</b><br><small>'+works.filter(w=>w.category===c).length+' '+t('works')+'</small></div><button class="danger" data-cdel="'+esc(c)+'">'+t('delete')+'</button></div>').join('')||'<div class="empty">'+t('noWorks')+'</div>';$$('[data-cdel]').forEach(b=>b.onclick=()=>{const c=b.dataset.cdel;if(works.some(w=>w.category===c)){toast(t('moveWorksFirst'));return}if(confirm(t('confirmDeleteCategory'))){cats=cats.filter(x=>x!==c);persist();renderAll()}})}
 function renderEvents(){const b=$('#eventsBody'),last=[...events].reverse().slice(0,60);b.innerHTML=last.map(e=>{const w=works.find(x=>x.id===e.workId);return '<tr><td>'+new Date(e.time).toLocaleString(lang==='fa'?'fa-IR':lang==='es'?'es-ES':'en-GB')+'</td><td>'+esc(eventLabel(e.type))+'</td><td>'+esc(w?.title||'-')+'</td><td>'+esc(e.source||'-')+'</td></tr>'}).join('')||'<tr><td colspan="4">—</td></tr>'}
 function renderSettings(){$('#syncEnabled').checked=!!settings.sync;$('#apiUrl').value=settings.apiUrl||'';renderArtistProfile()}
 function fillCats(){const s=$('#category'),v=s.value;s.innerHTML='<option value="">'+t('selectCategory')+'</option>'+cats.map(c=>'<option>'+esc(c)+'</option>').join('');if([...s.options].some(o=>o.value===v))s.value=v}
 function renderAll(){if(!lang)return;$('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));$('[data-i18n-placeholder]').forEach(e=>e.placeholder=t(e.dataset.i18nPlaceholder));renderDashboard();renderWorks();renderCategories();renderEvents();renderSettings();fillCats();renderFeatured();renderPublicGallery()}
-function resetForm(){editing=null;imageData='';$('#workForm').reset();$('#published').checked=true;$('#featured').checked=false;$('#preview').style.display='none';$('#preview').src='';$('#modalTitle').textContent=t('addArtworkTitle');fillCats()}
+function resetForm(){editing=null;imageData='';$('#workForm').reset();$('#published').checked=true;$('#featured').checked=false;$('#inventoryStatus').value='available';$('#catalogNo').value=makeCatalogNo();$('#preview').style.display='none';$('#preview').src='';$('#modalTitle').textContent=t('addArtworkTitle');fillCats()}
 function openNew(){resetForm();$('#workModal').classList.add('show')}
-function openEdit(id){const w=works.find(x=>x.id===id);if(!w)return;editing=id;imageData=w.image||'';$('#modalTitle').textContent=t('editArtwork');$('#title').value=w.title;$('#category').value=w.category||'';$('#year').value=w.year||'';$('#description').value=w.description||'';$('#price').value=w.price||'';$('#currency').value=w.currency||'€';$('#published').checked=!!w.published;$('#featured').checked=!!w.featured;if(imageData){$('#preview').src=imageData;$('#preview').style.display='block'}$('#workModal').classList.add('show')}
+function openEdit(id){const w=works.find(x=>x.id===id);if(!w)return;editing=id;imageData=w.image||'';$('#modalTitle').textContent=t('editArtwork');$('#title').value=w.title;$('#category').value=w.category||'';$('#year').value=w.year||'';$('#technique').value=w.technique||'';$('#dimensions').value=w.dimensions||'';$('#catalogNo').value=w.catalogNo||ensureCatalogNo(w);$('#inventoryStatus').value=w.inventoryStatus||'available';$('#description').value=w.description||'';$('#price').value=w.price||'';$('#currency').value=w.currency||'€';$('#published').checked=!!w.published;$('#featured').checked=!!w.featured;if(imageData){$('#preview').src=imageData;$('#preview').style.display='block'}$('#workModal').classList.add('show')}
 function togglePub(id){works=works.map(w=>w.id===id?{...w,published:!w.published}:w);log('publish',id);renderAll()}
 function removeWork(id){if(confirm(t('confirmDeleteWork'))){works=works.filter(w=>w.id!==id);log('delete',id);renderAll()}}
 async function imageToData(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const max=1600,sc=Math.min(1,max/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*sc);cv.height=Math.round(im.height*sc);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);resolve(cv.toDataURL('image/jpeg',.82))};im.onerror=reject;im.src=r.result};r.onerror=reject;r.readAsDataURL(file)})}
 $('#image').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{imageData=await imageToData(f);$('#preview').src=imageData;$('#preview').style.display='block'}catch(e){}};
-$('#workForm').onsubmit=e=>{e.preventDefault();const old=works.find(x=>x.id===editing),w={id:editing||uid(),title:$('#title').value.trim(),category:$('#category').value,year:$('#year').value.trim(),description:$('#description').value.trim(),price:$('#price').value.trim(),currency:$('#currency').value,image:imageData,published:$('#published').checked,featured:$('#featured').checked,created:old?.created||Date.now()};if(editing){works=works.map(x=>x.id===editing?w:x);log('edit',w.id)}else{works.push(w);log('add',w.id)}persist();$('#workModal').classList.remove('show');resetForm();renderAll();toast(t('saved'))};
+$('#workForm').onsubmit=e=>{e.preventDefault();const old=works.find(x=>x.id===editing),w={id:editing||uid(),title:$('#title').value.trim(),category:$('#category').value,year:$('#year').value.trim(),technique:$('#technique').value.trim(),dimensions:$('#dimensions').value.trim(),catalogNo:$('#catalogNo').value.trim()||makeCatalogNo(),inventoryStatus:$('#inventoryStatus').value,description:$('#description').value.trim(),price:$('#price').value.trim(),currency:$('#currency').value,image:imageData,published:$('#published').checked,featured:$('#featured').checked,created:old?.created||Date.now()};if(editing){works=works.map(x=>x.id===editing?w:x);log('edit',w.id)}else{works.push(w);log('add',w.id)}persist();$('#workModal').classList.remove('show');resetForm();renderAll();toast(t('saved'))};
 let searchTimer;$('#search').oninput=()=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{if($('#search').value.trim().length>1)log('search','',$('#search').value.trim())},600);renderWorks()};$('#sort').onchange=renderWorks;
 $('#addWork').onclick=openNew;$('#cancelWork').onclick=()=>$('#workModal').classList.remove('show');
 $('#addCategory').onclick=()=>$('#categoryModal').classList.add('show');$('#cancelCategory').onclick=()=>$('#categoryModal').classList.remove('show');$('#categoryForm').onsubmit=e=>{e.preventDefault();const n=$('#categoryName').value.trim();if(n&&!cats.includes(n)){cats.push(n);persist();renderAll();toast(t('categoryAdded'))}$('#categoryName').value='';$('#categoryModal').classList.remove('show')};
@@ -433,6 +479,14 @@ $('#restore').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{co
 $('#exportCsv').onclick=()=>{const rows=[['time','type','work','source'],...events.map(e=>[new Date(e.time).toISOString(),e.type,works.find(w=>w.id===e.workId)?.title||'',e.source||''])];download('rangin-analytics.csv',rows.map(r=>r.map(x=>'"'+String(x).replaceAll('"','""')+'"').join(',')).join('\n'),'text/csv')};
 $('#clearAnalytics').onclick=()=>{if(confirm(t('clearAnalytics')+'?')){events=[];persist();renderAll();toast(t('analyticsCleared'))}};
 
+
+
+$('#closeCertificate').onclick=()=>$('#certificateModal').classList.remove('show');
+$('#certificateModal').onclick=e=>{if(e.target.id==='certificateModal')e.currentTarget.classList.remove('show')};
+$('#printCertificate').onclick=()=>{const w=works.find(x=>x.id===certificateWorkId);if(!w)return;$('#printArea').innerHTML='<div class="certPaper">'+certificateHtml(w)+'</div>';setTimeout(()=>nativePrint('Rangin Certificate '+ensureCatalogNo(w)),350)};
+$('#shareCertificate').onclick=()=>{const w=works.find(x=>x.id===certificateWorkId);if(!w)return;const text=t('certificateTitle')+' — '+(w.title||'')+' — '+ensureCatalogNo(w);try{if(window.AndroidBridge&&AndroidBridge.shareText)AndroidBridge.shareText('Rangin Gallery',text);else if(navigator.share)navigator.share({title:'Rangin Gallery',text})}catch(e){}};
+$('#printCatalog').onclick=()=>{$('#printArea').innerHTML=buildCatalogHtml(false);setTimeout(()=>nativePrint('Rangin Gallery Catalog'),350)};
+$('#printPortfolio').onclick=()=>{$('#printArea').innerHTML=buildCatalogHtml(true);setTimeout(()=>nativePrint('Rangin Gallery Portfolio'),350)};
 
 $('#openExhibit').onclick=()=>{renderExhibit();$('#exhibitModal').classList.add('show')};
 $('#closeExhibit').onclick=()=>$('#exhibitModal').classList.remove('show');
