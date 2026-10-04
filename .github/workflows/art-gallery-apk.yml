@@ -24,11 +24,19 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Restore stable Android signing keystore
+      - name: Restore stable Rangin signing key
         uses: actions/cache@v4
         with:
           path: ~/.android/debug.keystore
-          key: artgallery-stable-debug-keystore-v1
+          key: rangin-gallery-signing-v2
+
+      - name: Ensure stable signing key exists
+        run: |
+          mkdir -p "$HOME/.android"
+          if [ ! -f "$HOME/.android/debug.keystore" ]; then
+            keytool -genkeypair -v               -keystore "$HOME/.android/debug.keystore"               -storepass android               -alias androiddebugkey               -keypass android               -dname "CN=Rangin Gallery,O=Rangin Gallery,C=ES"               -keyalg RSA               -keysize 2048               -validity 10000
+          fi
+          keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey | grep -E "SHA256|Owner|Valid"
 
       - name: Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -40,11 +48,11 @@ jobs:
         run: gradle --no-daemon assembleDebug
 
       - name: Prepare APK
-        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk Rangin-Gallery-v3.0.apk
+        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk Rangin-Gallery-v3.1-STABLE.apk
 
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete rangin-gallery-v3.0 --cleanup-tag -y || true
-          gh release create rangin-gallery-v3.0 Rangin-Gallery-v3.0.apk --title "Rangin Gallery v3.0" --notes "Persian-inspired visual redesign, English app name, and full English/Spanish/Persian interface with first-run language selection. Built on the stable signing baseline for in-place updates."
+          gh release delete rangin-gallery-v3.1-stable --cleanup-tag -y || true
+          gh release create rangin-gallery-v3.1-stable Rangin-Gallery-v3.1-STABLE.apk --title "Rangin Gallery v3.1 Stable" --notes "Stable signing baseline for all future in-place updates. Persian-inspired design and full English/Spanish/Persian interface."
