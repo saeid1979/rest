@@ -114,6 +114,18 @@ input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 
 .langCard h1{font-family:Georgia,serif;color:var(--lapis);margin:7px 0 4px}.langCard p{color:var(--muted);font-size:13px}.langChoices{display:grid;gap:9px;margin-top:18px}.langChoices button{border:1px solid #cfbb8d;background:#fffdf8;color:var(--lapis2);border-radius:14px;padding:13px;font-weight:900}.langChoices button:hover{background:#f2e4c8}
 .artIntro{background:linear-gradient(135deg,#143a73,#11697a);color:white;border-radius:22px;padding:18px;margin-bottom:12px;position:relative;overflow:hidden;border:2px solid #d5aa4f;box-shadow:var(--shadow)}
 .artIntro:before{content:"";position:absolute;inset:-20px;background:repeating-conic-gradient(from 0deg at 50% 50%,#ffffff0b 0 10deg,transparent 10deg 20deg);opacity:.55}.artIntro>*{position:relative}.artIntro h2{margin:0 0 5px;font-family:Georgia,serif}.artIntro p{margin:0;font-size:12px;opacity:.85;line-height:1.7}
+
+.artistCard{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;background:linear-gradient(135deg,#fffaf0,#f1e5c9);border:1px solid #d8c18d;border-radius:20px;padding:14px;margin:0 0 12px;box-shadow:var(--shadow)}
+.artistAvatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--lapis),var(--turq),var(--gold),var(--red),var(--lapis));color:#fff;font-size:26px;border:4px solid #fff6df}
+.artistName{font-weight:900;color:var(--lapis2);font-size:16px}.artistBio{font-size:11px;color:var(--muted);line-height:1.6;margin-top:3px}
+.featuredWrap{margin-top:12px}.featuredRail{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(190px,72%);gap:10px;overflow-x:auto;padding:2px 1px 10px;scroll-snap-type:x mandatory}
+.featureCard{scroll-snap-align:start;background:#fffdf7;border:1px solid #d9c8a4;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);position:relative}
+.featureCard img,.featureFallback{width:100%;aspect-ratio:4/3;object-fit:cover;display:grid;place-items:center;background:linear-gradient(135deg,#e7dbc2,#f9f1df);font-size:40px}
+.featureInfo{padding:10px}.featureInfo b{display:block;color:var(--lapis2)}.featureInfo small{color:var(--muted)}
+.viewerBody{text-align:center}.viewerImg{max-width:100%;max-height:52vh;object-fit:contain;border-radius:16px;border:2px solid var(--gold);background:#efe5d0}
+.viewerTitle{font-family:Georgia,serif;color:var(--lapis);font-size:23px;margin:12px 0 5px}.viewerMeta{font-size:12px;color:var(--muted)}.viewerDesc{line-height:1.9;font-size:13px;text-align:start;margin-top:10px;white-space:pre-wrap}
+.profileGrid{display:grid;gap:9px}.profileGrid textarea{min-height:86px}
+
 @media(min-width:700px){.kpis{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}.modal{align-items:center;justify-content:center}.sheet{max-width:680px;border-radius:25px}.langmini button{padding:7px 11px}}
 </style>
 </head>
@@ -147,6 +159,17 @@ input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 
 <main>
 <section id="dashboard" class="page on">
  <div class="artIntro"><h2 data-i18n="welcomeTitle">Your art, presented with character</h2><p data-i18n="welcomeText">Manage your collection, monitor engagement and keep your portfolio ready for online expansion.</p></div>
+
+ <div class="artistCard">
+   <div class="artistAvatar">✦</div>
+   <div><div class="artistName" id="artistDisplayName">Rangin Artist</div><div class="artistBio" id="artistDisplayBio" data-i18n="artistBioDefault">Your artist profile will appear here.</div></div>
+   <button class="goldbtn" id="previewGallery" data-i18n="previewGallery">Preview gallery</button>
+ </div>
+ <div class="featuredWrap">
+   <div class="section-title"><h2 data-i18n="featuredCollection">Featured collection</h2><button class="soft" id="goWorks" data-i18n="manage">Manage</button></div>
+   <div id="featuredRail" class="featuredRail"></div>
+ </div>
+
  <div class="section-title"><h2 data-i18n="dashboard">Dashboard</h2><button class="soft" id="refreshDash" data-i18n="refresh">Refresh</button></div>
  <div class="ornament"></div>
  <div class="kpis">
@@ -182,6 +205,16 @@ input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 
 
 <section id="settings" class="page">
  <div class="section-title"><h2 data-i18n="settings">Settings</h2></div><div class="ornament"></div>
+
+ <div class="card"><h3 data-i18n="artistProfile">Artist profile</h3>
+   <div class="profileGrid">
+     <input id="artistName" data-i18n-placeholder="artistName" placeholder="Artist name">
+     <textarea id="artistBio" data-i18n-placeholder="artistBio" placeholder="Short biography"></textarea>
+     <div class="twocol"><input id="artistCity" data-i18n-placeholder="artistCity" placeholder="City / Country"><input id="artistWebsite" data-i18n-placeholder="artistWebsite" placeholder="Website or social link"></div>
+     <button class="goldbtn" id="saveProfile" data-i18n="saveProfile">Save profile</button>
+   </div>
+ </div>
+
  <div class="card"><h3 data-i18n="language">Language</h3><div class="langChoices"><button data-setlang="en">English</button><button data-setlang="es">Español</button><button data-setlang="fa">فارسی</button></div></div>
  <div class="card"><h3 data-i18n="onlineSync">Online sync</h3><div class="switch"><span data-i18n="enableSync">Enable sync</span><input type="checkbox" id="syncEnabled"></div><input id="apiUrl" data-i18n-placeholder="serverUrl" placeholder="Server API URL"><button class="soft" id="testSync" style="margin-top:8px;width:100%" data-i18n="testConnection">Test connection</button><small id="syncMsg" style="display:block;color:var(--muted);margin-top:7px" data-i18n="offlineWorks">Without a server the app still works fully offline.</small></div>
  <div class="card"><h3 data-i18n="backupRestore">Backup & restore</h3><div class="twocol"><button class="soft" id="backup" data-i18n="exportJson">Export JSON</button><label class="soft" style="padding:10px;text-align:center;border-radius:13px;font-weight:800"><span data-i18n="restore">Restore</span><input hidden id="restore" type="file" accept=".json,application/json"></label></div></div>
@@ -204,11 +237,29 @@ input:focus,textarea:focus,select:focus{border-color:var(--turq);box-shadow:0 0 
  <div class="twocol"><select id="category"></select><input id="year" inputmode="numeric" data-i18n-placeholder="year" placeholder="Year"></div>
  <textarea id="description" rows="4" data-i18n-placeholder="description" placeholder="Description"></textarea>
  <div class="twocol"><input id="price" inputmode="decimal" data-i18n-placeholder="price" placeholder="Price"><select id="currency"><option>€</option><option>$</option><option>تومان</option></select></div>
+ <div class="switch"><span data-i18n="featured">Featured artwork</span><input type="checkbox" id="featured"></div>
  <div class="switch"><span data-i18n="publishNow">Publish</span><input type="checkbox" id="published" checked></div>
  <div class="foot"><button type="button" class="soft" id="cancelWork" data-i18n="cancel">Cancel</button><button class="primary" type="submit" data-i18n="save">Save</button></div>
 </form></div></div>
 
 <div class="modal" id="categoryModal"><div class="sheet"><h2 data-i18n="newCategoryTitle">New category</h2><div class="ornament"></div><form id="categoryForm" class="form"><input id="categoryName" required data-i18n-placeholder="categoryName" placeholder="Category name"><div class="foot"><button type="button" class="soft" id="cancelCategory" data-i18n="cancel">Cancel</button><button class="primary" data-i18n="save">Save</button></div></form></div></div>
+
+<div class="modal" id="viewerModal"><div class="sheet"><div class="viewerBody">
+  <img id="viewerImg" class="viewerImg" style="display:none">
+  <div id="viewerFallback" class="featureFallback">✦</div>
+  <div id="viewerTitle" class="viewerTitle"></div>
+  <div id="viewerMeta" class="viewerMeta"></div>
+  <div id="viewerDesc" class="viewerDesc"></div>
+  <div class="foot" style="margin-top:14px"><button class="soft" id="closeViewer" data-i18n="close">Close</button><button class="goldbtn" id="shareArtwork" data-i18n="share">Share</button></div>
+</div></div></div>
+
+<div class="modal" id="galleryModal"><div class="sheet">
+ <div class="section-title"><h2 data-i18n="galleryPreview">Gallery preview</h2><button class="soft" id="closeGallery" data-i18n="close">Close</button></div>
+ <div class="ornament"></div>
+ <div id="publicGalleryGrid" class="grid"></div>
+ <div id="publicGalleryEmpty" class="empty" data-i18n="noPublished">No published artwork yet.</div>
+</div></div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -217,6 +268,11 @@ const I={
  es:{tagline:"Portafolio artístico con inspiración persa",welcomeTitle:"Tu arte, presentado con personalidad",welcomeText:"Gestiona tu colección, revisa la interacción y prepara tu portafolio para crecer online.",dashboard:"Panel",refresh:"Actualizar",totalWorks:"Obras totales",published:"Publicadas",totalViews:"Visitas totales",todayViews:"Visitas de hoy",topWorks:"Obras más vistas",viewSources:"Origen de visitas",systemStatus:"Estado del sistema",offlineMode:"Modo sin conexión",active:"Activo",onlineSync:"Sincronización online",worksManagement:"Gestión de obras",addArtwork:"+ Añadir obra",searchWorks:"Buscar obras…",newest:"Más recientes",mostViewed:"Más vistas",title:"Título",noWorks:"Todavía no hay obras.",categories:"Categorías",newCategory:"+ Nueva categoría",analytics:"Estadísticas e informes",analyticsShort:"Estadísticas",exportCsv:"Exportar CSV",recordedViews:"Visitas registradas",searches:"Búsquedas",edits:"Ediciones",addedWorks:"Obras añadidas",recentEvents:"Eventos recientes",time:"Hora",type:"Tipo",artwork:"Obra",source:"Origen",analyticsNote:"Las estadísticas locales cuentan la actividad de este dispositivo. Conecta un servidor para recopilar visitas reales desde varios dispositivos.",settings:"Ajustes",language:"Idioma",enableSync:"Activar sincronización",serverUrl:"URL de la API del servidor",testConnection:"Probar conexión",offlineWorks:"Sin servidor, la app sigue funcionando completamente offline.",backupRestore:"Copia y restauración",exportJson:"Exportar JSON",restore:"Restaurar",localAnalytics:"Estadísticas locales",clearAnalytics:"Borrar estadísticas locales",works:"Obras",addArtworkTitle:"Añadir obra",editArtwork:"Editar obra",chooseImage:"Elegir imagen",artworkTitle:"Título de la obra",year:"Año",description:"Descripción",price:"Precio",publishNow:"Publicar",cancel:"Cancelar",save:"Guardar",newCategoryTitle:"Nueva categoría",categoryName:"Nombre de la categoría",uncategorized:"Sin categoría",draft:"Borrador",views:"visitas",edit:"Editar",unpublish:"Ocultar",publish:"Publicar",delete:"Eliminar",noViews:"Aún no hay visitas.",noSource:"Aún no hay orígenes registrados.",ready:"Listo para conectar",syncActive:"Activo",saved:"Guardado",viewRecorded:"Visita registrada",categoryAdded:"Categoría añadida",moveWorksFirst:"Primero mueve las obras de esta categoría.",confirmDeleteCategory:"¿Eliminar esta categoría?",confirmDeleteWork:"¿Eliminar esta obra?",restoreDone:"Restauración completada",invalidBackup:"Archivo de copia no válido",analyticsCleared:"Estadísticas borradas",serverMissing:"Falta la URL del servidor.",testing:"Probando…",connectionOk:"Conexión correcta.",connectionBad:"El servidor respondió con error.",connectionFailed:"No se pudo conectar; el modo offline sigue disponible.",selectCategory:"Sin categoría",eventView:"Visita",eventSearch:"Búsqueda",eventEdit:"Edición",eventAdd:"Añadir",eventPublish:"Publicar",eventDelete:"Eliminar",insideApp:"Dentro de la app",changeLanguage:"Idioma cambiado"},
  fa:{tagline:"گالری هنری با الهام از هنر ایرانی",welcomeTitle:"هنر شما، با هویتی متمایز",welcomeText:"آثار خود را مدیریت کنید، بازدیدها را ببینید و گالری را برای توسعه آنلاین آماده نگه دارید.",dashboard:"داشبورد",refresh:"بروزرسانی",totalWorks:"کل آثار",published:"منتشرشده",totalViews:"کل بازدید",todayViews:"بازدید امروز",topWorks:"پربازدیدترین آثار",viewSources:"منبع بازدید",systemStatus:"وضعیت سیستم",offlineMode:"حالت آفلاین",active:"فعال",onlineSync:"همگام‌سازی آنلاین",worksManagement:"مدیریت آثار",addArtwork:"+ افزودن اثر",searchWorks:"جستجو در آثار…",newest:"جدیدترین",mostViewed:"پربازدیدترین",title:"عنوان",noWorks:"هنوز اثری اضافه نشده است.",categories:"دسته‌بندی‌ها",newCategory:"+ دسته جدید",analytics:"آمار و گزارش‌ها",analyticsShort:"آمار",exportCsv:"خروجی CSV",recordedViews:"بازدید ثبت‌شده",searches:"جستجوها",edits:"ویرایش‌ها",addedWorks:"آثار افزوده‌شده",recentEvents:"آخرین رویدادها",time:"زمان",type:"نوع",artwork:"اثر",source:"منبع",analyticsNote:"آمار محلی فعالیت همین دستگاه را ثبت می‌کند. برای آمار واقعی بازدیدکنندگان از چند دستگاه، سرور مرکزی را متصل کنید.",settings:"تنظیمات",language:"زبان",enableSync:"فعال‌سازی همگام‌سازی",serverUrl:"آدرس API سرور",testConnection:"آزمایش اتصال",offlineWorks:"بدون سرور نیز اپ به‌طور کامل آفلاین کار می‌کند.",backupRestore:"پشتیبان‌گیری و بازیابی",exportJson:"خروجی JSON",restore:"بازیابی",localAnalytics:"آمار محلی",clearAnalytics:"پاک‌کردن آمار محلی",works:"آثار",addArtworkTitle:"افزودن اثر",editArtwork:"ویرایش اثر",chooseImage:"انتخاب عکس",artworkTitle:"عنوان اثر",year:"سال",description:"توضیحات",price:"قیمت",publishNow:"منتشر شود",cancel:"انصراف",save:"ذخیره",newCategoryTitle:"دسته‌بندی جدید",categoryName:"نام دسته",uncategorized:"بدون دسته",draft:"پیش‌نویس",views:"بازدید",edit:"ویرایش",unpublish:"عدم انتشار",publish:"انتشار",delete:"حذف",noViews:"هنوز بازدیدی ثبت نشده.",noSource:"فعلاً منبعی ثبت نشده.",ready:"آماده اتصال",syncActive:"فعال",saved:"ذخیره شد",viewRecorded:"بازدید ثبت شد",categoryAdded:"دسته اضافه شد",moveWorksFirst:"ابتدا آثار این دسته را منتقل کنید.",confirmDeleteCategory:"این دسته حذف شود؟",confirmDeleteWork:"این اثر حذف شود؟",restoreDone:"بازیابی انجام شد",invalidBackup:"فایل پشتیبان معتبر نیست",analyticsCleared:"آمار پاک شد",serverMissing:"آدرس سرور وارد نشده است.",testing:"در حال آزمایش…",connectionOk:"اتصال موفق است.",connectionBad:"سرور پاسخ داد ولی وضعیت مناسب نیست.",connectionFailed:"اتصال برقرار نشد؛ حالت آفلاین همچنان فعال است.",selectCategory:"بدون دسته",eventView:"بازدید",eventSearch:"جستجو",eventEdit:"ویرایش",eventAdd:"افزودن",eventPublish:"انتشار",eventDelete:"حذف",insideApp:"داخل اپ",changeLanguage:"زبان تغییر کرد"}
 };
+
+
+Object.assign(I.en,{artistBioDefault:"Your artist profile will appear here.",previewGallery:"Preview gallery",featuredCollection:"Featured collection",manage:"Manage",artistProfile:"Artist profile",artistName:"Artist name",artistBio:"Short biography",artistCity:"City / Country",artistWebsite:"Website or social link",saveProfile:"Save profile",profileSaved:"Profile saved",featured:"Featured artwork",close:"Close",share:"Share",galleryPreview:"Gallery preview",noPublished:"No published artwork yet.",shareText:"Artwork from Rangin Gallery"});
+Object.assign(I.es,{artistBioDefault:"Tu perfil de artista aparecerá aquí.",previewGallery:"Vista previa",featuredCollection:"Colección destacada",manage:"Gestionar",artistProfile:"Perfil del artista",artistName:"Nombre del artista",artistBio:"Biografía breve",artistCity:"Ciudad / País",artistWebsite:"Web o red social",saveProfile:"Guardar perfil",profileSaved:"Perfil guardado",featured:"Obra destacada",close:"Cerrar",share:"Compartir",galleryPreview:"Vista previa de la galería",noPublished:"Aún no hay obras publicadas.",shareText:"Obra de Rangin Gallery"});
+Object.assign(I.fa,{artistBioDefault:"پروفایل هنرمند شما در این بخش نمایش داده می‌شود.",previewGallery:"پیش‌نمایش گالری",featuredCollection:"مجموعهٔ ویژه",manage:"مدیریت",artistProfile:"پروفایل هنرمند",artistName:"نام هنرمند",artistBio:"زندگینامه کوتاه",artistCity:"شهر / کشور",artistWebsite:"وب‌سایت یا شبکه اجتماعی",saveProfile:"ذخیره پروفایل",profileSaved:"پروفایل ذخیره شد",featured:"اثر ویژه",close:"بستن",share:"اشتراک‌گذاری",galleryPreview:"پیش‌نمایش گالری",noPublished:"هنوز اثر منتشرشده‌ای وجود ندارد.",shareText:"اثر هنری از Rangin Gallery"});
 
 const K={works:'ag2_works',cats:'ag2_cats',events:'ag2_events',settings:'ag2_settings',lang:'rangin_lang'};
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -242,6 +298,37 @@ function nav(p){$$('.page').forEach(x=>x.classList.toggle('on',x.id===p));$$('.n
 $$('.nav button').forEach(b=>b.onclick=()=>nav(b.dataset.page));
 function viewCount(id){return events.filter(e=>e.type==='view'&&e.workId===id).length}
 function eventLabel(x){return ({view:t('eventView'),search:t('eventSearch'),edit:t('eventEdit'),add:t('eventAdd'),publish:t('eventPublish'),delete:t('eventDelete')})[x]||x}
+function renderArtistProfile(){
+ const a=settings.artist||{};
+ $('#artistDisplayName').textContent=a.name||'Rangin Artist';
+ $('#artistDisplayBio').textContent=a.bio||t('artistBioDefault');
+ $('#artistName').value=a.name||'';
+ $('#artistBio').value=a.bio||'';
+ $('#artistCity').value=a.city||'';
+ $('#artistWebsite').value=a.website||'';
+}
+function renderFeatured(){
+ const box=$('#featuredRail');
+ const arr=works.filter(w=>w.published&&w.featured).slice(0,8);
+ const shown=arr.length?arr:works.filter(w=>w.published).slice(0,5);
+ box.innerHTML=shown.length?shown.map(w=>'<article class="featureCard" data-open="'+w.id+'">'+(w.image?'<img src="'+w.image+'">':'<div class="featureFallback">✦</div>')+'<div class="featureInfo"><b>'+esc(w.title)+'</b><small>'+esc(w.category||t('uncategorized'))+(w.year?' · '+esc(w.year):'')+'</small></div></article>').join(''):'<div class="empty">'+t('noPublished')+'</div>';
+ $('[data-open]').forEach(x=>x.onclick=()=>openViewer(x.dataset.open));
+}
+function renderPublicGallery(){
+ const box=$('#publicGalleryGrid'), arr=works.filter(w=>w.published);
+ $('#publicGalleryEmpty').style.display=arr.length?'none':'block';
+ box.innerHTML=arr.map(w=>'<article class="work" data-public="'+w.id+'"><div class="pic">'+(w.image?'<img src="'+w.image+'">':'✦')+'</div><div class="wb"><div class="title">'+esc(w.title)+'</div><div class="meta">'+esc(w.category||t('uncategorized'))+(w.year?' · '+esc(w.year):'')+'</div></div></article>').join('');
+ $('[data-public]').forEach(x=>x.onclick=()=>openViewer(x.dataset.public));
+}
+let viewerWorkId='';
+function openViewer(id){
+ const w=works.find(x=>x.id===id); if(!w)return; viewerWorkId=id; log('view',id);
+ $('#viewerTitle').textContent=w.title||'';
+ $('#viewerMeta').textContent=[w.category,w.year,w.price?(w.price+' '+(w.currency||'')):''].filter(Boolean).join(' · ');
+ $('#viewerDesc').textContent=w.description||'';
+ if(w.image){$('#viewerImg').src=w.image;$('#viewerImg').style.display='inline-block';$('#viewerFallback').style.display='none'}else{$('#viewerImg').style.display='none';$('#viewerFallback').style.display='grid'}
+ $('#viewerModal').classList.add('show'); renderDashboard();
+}
 function renderDashboard(){
  const views=events.filter(e=>e.type==='view');
  $('#kWorks').textContent=works.length;$('#kPublished').textContent=works.filter(w=>w.published).length;$('#kViews').textContent=views.length;$('#kToday').textContent=views.filter(e=>e.day===todayKey()).length;
@@ -258,17 +345,17 @@ function renderWorks(){const a=filteredWorks(),g=$('#worksGrid');g.innerHTML='';
 }
 function renderCategories(){const l=$('#categoryList');l.innerHTML=cats.map(c=>'<div class="rowitem"><div><b>'+esc(c)+'</b><br><small>'+works.filter(w=>w.category===c).length+' '+t('works')+'</small></div><button class="danger" data-cdel="'+esc(c)+'">'+t('delete')+'</button></div>').join('')||'<div class="empty">'+t('noWorks')+'</div>';$$('[data-cdel]').forEach(b=>b.onclick=()=>{const c=b.dataset.cdel;if(works.some(w=>w.category===c)){toast(t('moveWorksFirst'));return}if(confirm(t('confirmDeleteCategory'))){cats=cats.filter(x=>x!==c);persist();renderAll()}})}
 function renderEvents(){const b=$('#eventsBody'),last=[...events].reverse().slice(0,60);b.innerHTML=last.map(e=>{const w=works.find(x=>x.id===e.workId);return '<tr><td>'+new Date(e.time).toLocaleString(lang==='fa'?'fa-IR':lang==='es'?'es-ES':'en-GB')+'</td><td>'+esc(eventLabel(e.type))+'</td><td>'+esc(w?.title||'-')+'</td><td>'+esc(e.source||'-')+'</td></tr>'}).join('')||'<tr><td colspan="4">—</td></tr>'}
-function renderSettings(){$('#syncEnabled').checked=!!settings.sync;$('#apiUrl').value=settings.apiUrl||''}
+function renderSettings(){$('#syncEnabled').checked=!!settings.sync;$('#apiUrl').value=settings.apiUrl||'';renderArtistProfile()}
 function fillCats(){const s=$('#category'),v=s.value;s.innerHTML='<option value="">'+t('selectCategory')+'</option>'+cats.map(c=>'<option>'+esc(c)+'</option>').join('');if([...s.options].some(o=>o.value===v))s.value=v}
-function renderAll(){if(!lang)return;$$('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));$$('[data-i18n-placeholder]').forEach(e=>e.placeholder=t(e.dataset.i18nPlaceholder));renderDashboard();renderWorks();renderCategories();renderEvents();renderSettings();fillCats()}
-function resetForm(){editing=null;imageData='';$('#workForm').reset();$('#published').checked=true;$('#preview').style.display='none';$('#preview').src='';$('#modalTitle').textContent=t('addArtworkTitle');fillCats()}
+function renderAll(){if(!lang)return;$('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));$('[data-i18n-placeholder]').forEach(e=>e.placeholder=t(e.dataset.i18nPlaceholder));renderDashboard();renderWorks();renderCategories();renderEvents();renderSettings();fillCats();renderFeatured();renderPublicGallery()}
+function resetForm(){editing=null;imageData='';$('#workForm').reset();$('#published').checked=true;$('#featured').checked=false;$('#preview').style.display='none';$('#preview').src='';$('#modalTitle').textContent=t('addArtworkTitle');fillCats()}
 function openNew(){resetForm();$('#workModal').classList.add('show')}
-function openEdit(id){const w=works.find(x=>x.id===id);if(!w)return;editing=id;imageData=w.image||'';$('#modalTitle').textContent=t('editArtwork');$('#title').value=w.title;$('#category').value=w.category||'';$('#year').value=w.year||'';$('#description').value=w.description||'';$('#price').value=w.price||'';$('#currency').value=w.currency||'€';$('#published').checked=!!w.published;if(imageData){$('#preview').src=imageData;$('#preview').style.display='block'}$('#workModal').classList.add('show')}
+function openEdit(id){const w=works.find(x=>x.id===id);if(!w)return;editing=id;imageData=w.image||'';$('#modalTitle').textContent=t('editArtwork');$('#title').value=w.title;$('#category').value=w.category||'';$('#year').value=w.year||'';$('#description').value=w.description||'';$('#price').value=w.price||'';$('#currency').value=w.currency||'€';$('#published').checked=!!w.published;$('#featured').checked=!!w.featured;if(imageData){$('#preview').src=imageData;$('#preview').style.display='block'}$('#workModal').classList.add('show')}
 function togglePub(id){works=works.map(w=>w.id===id?{...w,published:!w.published}:w);log('publish',id);renderAll()}
 function removeWork(id){if(confirm(t('confirmDeleteWork'))){works=works.filter(w=>w.id!==id);log('delete',id);renderAll()}}
 async function imageToData(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const max=1600,sc=Math.min(1,max/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*sc);cv.height=Math.round(im.height*sc);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);resolve(cv.toDataURL('image/jpeg',.82))};im.onerror=reject;im.src=r.result};r.onerror=reject;r.readAsDataURL(file)})}
 $('#image').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{imageData=await imageToData(f);$('#preview').src=imageData;$('#preview').style.display='block'}catch(e){}};
-$('#workForm').onsubmit=e=>{e.preventDefault();const old=works.find(x=>x.id===editing),w={id:editing||uid(),title:$('#title').value.trim(),category:$('#category').value,year:$('#year').value.trim(),description:$('#description').value.trim(),price:$('#price').value.trim(),currency:$('#currency').value,image:imageData,published:$('#published').checked,created:old?.created||Date.now()};if(editing){works=works.map(x=>x.id===editing?w:x);log('edit',w.id)}else{works.push(w);log('add',w.id)}persist();$('#workModal').classList.remove('show');resetForm();renderAll();toast(t('saved'))};
+$('#workForm').onsubmit=e=>{e.preventDefault();const old=works.find(x=>x.id===editing),w={id:editing||uid(),title:$('#title').value.trim(),category:$('#category').value,year:$('#year').value.trim(),description:$('#description').value.trim(),price:$('#price').value.trim(),currency:$('#currency').value,image:imageData,published:$('#published').checked,featured:$('#featured').checked,created:old?.created||Date.now()};if(editing){works=works.map(x=>x.id===editing?w:x);log('edit',w.id)}else{works.push(w);log('add',w.id)}persist();$('#workModal').classList.remove('show');resetForm();renderAll();toast(t('saved'))};
 let searchTimer;$('#search').oninput=()=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{if($('#search').value.trim().length>1)log('search','',$('#search').value.trim())},600);renderWorks()};$('#sort').onchange=renderWorks;
 $('#addWork').onclick=openNew;$('#cancelWork').onclick=()=>$('#workModal').classList.remove('show');
 $('#addCategory').onclick=()=>$('#categoryModal').classList.add('show');$('#cancelCategory').onclick=()=>$('#categoryModal').classList.remove('show');$('#categoryForm').onsubmit=e=>{e.preventDefault();const n=$('#categoryName').value.trim();if(n&&!cats.includes(n)){cats.push(n);persist();renderAll();toast(t('categoryAdded'))}$('#categoryName').value='';$('#categoryModal').classList.remove('show')};
@@ -280,6 +367,16 @@ $('#backup').onclick=()=>download('rangin-gallery-backup.json',JSON.stringify({v
 $('#restore').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{const d=JSON.parse(await f.text());works=Array.isArray(d.works)?d.works:works;cats=Array.isArray(d.cats)?d.cats:cats;events=Array.isArray(d.events)?d.events:events;settings=d.settings||settings;persist();renderAll();toast(t('restoreDone'))}catch(err){toast(t('invalidBackup'))}};
 $('#exportCsv').onclick=()=>{const rows=[['time','type','work','source'],...events.map(e=>[new Date(e.time).toISOString(),e.type,works.find(w=>w.id===e.workId)?.title||'',e.source||''])];download('rangin-analytics.csv',rows.map(r=>r.map(x=>'"'+String(x).replaceAll('"','""')+'"').join(',')).join('\n'),'text/csv')};
 $('#clearAnalytics').onclick=()=>{if(confirm(t('clearAnalytics')+'?')){events=[];persist();renderAll();toast(t('analyticsCleared'))}};
+
+$('#goWorks').onclick=()=>nav('works');
+$('#previewGallery').onclick=()=>{renderPublicGallery();$('#galleryModal').classList.add('show')};
+$('#closeGallery').onclick=()=>$('#galleryModal').classList.remove('show');
+$('#closeViewer').onclick=()=>$('#viewerModal').classList.remove('show');
+$('#shareArtwork').onclick=async()=>{const w=works.find(x=>x.id===viewerWorkId);if(!w)return;const payload={title:w.title,text:t('shareText')+' — '+w.title};try{if(navigator.share)await navigator.share(payload);else{await navigator.clipboard.writeText(payload.text);toast(t('share'))}}catch(e){}};
+$('#saveProfile').onclick=()=>{settings.artist={name:$('#artistName').value.trim(),bio:$('#artistBio').value.trim(),city:$('#artistCity').value.trim(),website:$('#artistWebsite').value.trim()};persist();renderArtistProfile();toast(t('profileSaved'))};
+$('#viewerModal').onclick=e=>{if(e.target.id==='viewerModal')e.currentTarget.classList.remove('show')};
+$('#galleryModal').onclick=e=>{if(e.target.id==='galleryModal')e.currentTarget.classList.remove('show')};
+
 $('#workModal').onclick=e=>{if(e.target.id==='workModal')e.currentTarget.classList.remove('show')};$('#categoryModal').onclick=e=>{if(e.target.id==='categoryModal')e.currentTarget.classList.remove('show')};
 if(lang) renderAll();
 </script>
