@@ -1,4 +1,4 @@
-name: Build Art Gallery APK
+name: Build and Publish Art Gallery APK
 
 on:
   push:
@@ -7,7 +7,9 @@ on:
     paths:
       - "art-gallery-android/**"
       - ".github/workflows/art-gallery-apk.yml"
-  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -27,16 +29,16 @@ jobs:
         with:
           gradle-version: "8.9"
 
-      - name: Build debug APK
+      - name: Build APK
         working-directory: art-gallery-android
         run: gradle --no-daemon assembleDebug
 
-      - name: Rename APK
-        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk ArtGallery-v1.0.apk
+      - name: Prepare APK
+        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk ArtGallery.apk
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: ArtGallery-v1.0-APK
-          path: ArtGallery-v1.0.apk
-          if-no-files-found: error
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete artgallery-v1.0 --cleanup-tag -y || true
+          gh release create artgallery-v1.0 ArtGallery.apk --title "Art Gallery v1.0" --notes "Android APK for Art Gallery"
