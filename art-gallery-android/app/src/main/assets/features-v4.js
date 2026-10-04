@@ -8,7 +8,7 @@ const V4DEFAULT={
   notifications:[], payments:{stripe:'',paypal:'',redsys:'',inPerson:true}, web:{publicUrl:'',adminUrl:'',syncUrl:''},
   ai:{endpoint:''}, security:{pin:'',kiosk:false,protect:false}, theme:'miniature', autoBackup:false, vipPin:'', shareCount:{}
 };
-let v4=(()=>{try{return Object.assign({},V4DEFAULT,JSON.parse(localStorage.getItem(V4K)||'{}'))}catch(e){return structuredClone(V4DEFAULT)}})();
+let v4=(()=>{try{return Object.assign({},V4DEFAULT,JSON.parse(localStorage.getItem(V4K)||'{}'))}catch(e){return JSON.parse(JSON.stringify(V4DEFAULT))}})();
 ['clients','sales','commissions','exhibitions','comments','newsletter','artists','collections','notifications'].forEach(k=>{if(!Array.isArray(v4[k]))v4[k]=[]});
 v4.payments=Object.assign({},V4DEFAULT.payments,v4.payments||{});v4.web=Object.assign({},V4DEFAULT.web,v4.web||{});v4.ai=Object.assign({},V4DEFAULT.ai,v4.ai||{});v4.security=Object.assign({},V4DEFAULT.security,v4.security||{});
 const save4=()=>localStorage.setItem(V4K,JSON.stringify(v4));
@@ -40,29 +40,50 @@ function fillCollections(){
  const old=sel.value;sel.innerHTML='<option value="">'+tx('No collection','Sin colección','بدون مجموعه')+'</option>'+v4.collections.map(c=>'<option value="'+h(c.id)+'">'+h(c.name)+'</option>').join('');sel.value=old;
 }
 function patchWorkForm(){
- if(typeof openEdit==='function'&&!window.__v4OpenPatched){
-   window.__v4OpenPatched=true;
-   const oldOpen=openEdit;openEdit=function(wid){oldOpen(wid);const w=works.find(a=>a.id===wid)||{};fillCollections();
-     q('#shortDescription').value=w.shortDescription||'';q('#tags').value=(w.tags||[]).join(', ');q('#collectionSelect').value=w.collectionId||'';
-     q('#videoUrl').value=w.videoUrl||'';q('#discountPrice').value=w.discountPrice||'';q('#signatureNote').value=w.signatureNote||'';q('#vipWork').checked=!!w.vip;
+ const form=q('#workForm');if(!form||window.__v4WorkPatched)return;window.__v4WorkPatched=true;
+ const oldOpen=openEdit,oldReset=resetForm,oldSubmit=form.onsubmit;
+ openEdit=function(wid){
+   oldOpen(wid);const w=works.find(a=>a.id===wid)||{};fillCollections();
+   q('#shortDescription').value=w.shortDescription||'';
+   q('#tags').value=(w.tags||[]).join(', ');
+   q('#collectionSelect').value=w.collectionId||'';
+   q('#videoUrl').value=w.videoUrl||'';
+   q('#discountPrice').value=w.discountPrice||'';
+   q('#signatureNote').value=w.signatureNote||'';
+   q('#vipWork').checked=!!w.vip;
+ };
+ resetForm=function(){
+   oldReset();fillCollections();
+   if(q('#shortDescription')){
+     q('#shortDescription').value='';q('#tags').value='';q('#videoUrl').value='';
+     q('#discountPrice').value='';q('#signatureNote').value='';q('#vipWork').checked=false;q('#collectionSelect').value='';
+     if(q('#extraImages'))q('#extraImages').value='';
+   }
+ };
+ form.onsubmit=async function(e){
+   const editId=editing;
+   const existing=editId?works.find(a=>a.id===editId):null;
+   const snap={
+     shortDescription:q('#shortDescription').value.trim(),
+     tags:q('#tags').value.split(',').map(x=>x.trim()).filter(Boolean),
+     collectionId:q('#collectionSelect').value,
+     videoUrl:q('#videoUrl').value.trim(),
+     discountPrice:q('#discountPrice').value.trim(),
+     signatureNote:q('#signatureNote').value.trim(),
+     vip:q('#vipWork').checked
    };
-   const oldReset=resetForm;resetForm=function(){oldReset();fillCollections();if(q('#shortDescription')){q('#shortDescription').value='';q('#tags').value='';q('#videoUrl').value='';q('#discountPrice').value='';q('#signatureNote').value='';q('#vipWork').checked=false;q('#collectionSelect').value='';}};
-   const oldSubmit=q('#workForm').onsubmit;
-   q('#workForm').onsubmit=async function(e){
-     const existing=editing?works.find(a=>a.id===editing):null;
-     let extras=existing?.extraImages||[];
-     const files=[...(q('#extraImages').files||[])].slice(0,4);
-     for(const f of files){try{extras.push(await imageToData(f))}catch(err){}}
-     extras=extras.slice(-4);
-     await oldSubmit.call(this,e);
-     const target=editing?works.find(a=>a.id===editing):works[works.length-1];
-     if(target){
-       target.shortDescription=q('#shortDescription').value.trim();target.tags=q('#tags').value.split(',').map(x=>x.trim()).filter(Boolean);
-       target.collectionId=q('#collectionSelect').value;target.videoUrl=q('#videoUrl').value.trim();target.discountPrice=q('#discountPrice').value.trim();
-       target.signatureNote=q('#signatureNote').value.trim();target.vip=q('#vipWork').checked;target.extraImages=extras;persist();renderAll();
-     }
-   };
- }
+   let extras=[...(existing?.extraImages||[])];
+   const files=[...(q('#extraImages')?.files||[])].slice(0,4);
+   for(const file of files){try{extras.push(await imageToData(file))}catch(err){}}
+   extras=extras.slice(-4);
+   await oldSubmit.call(this,e);
+   const target=editId?works.find(a=>a.id===editId):works[works.length-1];
+   if(target){
+     Object.assign(target,snap,{extraImages:extras});
+     persist();
+     try{renderAll()}catch(err){}
+   }
+ };
 }
 function suiteHtml(){
  return '<div id="proSuite" class="proShell"><div class="proHead"><div class="proHeadRow"><div><h2>Rangin Gallery Pro</h2><small>'+tx('Professional artist suite','Suite profesional del artista','مجموعه حرفه‌ای هنرمند')+'</small></div><button class="proBtn" id="closePro">'+tx('Close','Cerrar','بستن')+'</button></div></div>'+
@@ -238,5 +259,6 @@ function init(){
  q('#closePro').onclick=()=>q('#proSuite').classList.remove('show');
  qa('[data-lang],[data-setlang]').forEach(b=>b.addEventListener('click',()=>setTimeout(()=>{mountHeader();renderSuite()},50)));
 }
+window.RanginPro={open:openSuite,refresh:renderSuite,section:function(name){activeSec=name;openSuite();renderSuite();}};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
