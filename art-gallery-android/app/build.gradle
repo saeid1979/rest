@@ -7,11 +7,11 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.saeid.artgallery"
+        applicationId "com.saeid.rangingallery"
         minSdk 24
         targetSdk 35
-        versionCode 5
-        versionName "3.1"
+        versionCode 1
+        versionName "3.2"
     }
 
     compileOptions {
