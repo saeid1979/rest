@@ -34,11 +34,11 @@ jobs:
         run: gradle --no-daemon assembleDebug
 
       - name: Prepare APK
-        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk ArtGallery.apk
+        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk ArtGallery-v2.0.apk
 
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete artgallery-v1.0 --cleanup-tag -y || true
-          gh release create artgallery-v1.0 ArtGallery.apk --title "Art Gallery v1.0" --notes "Android APK for Art Gallery"
+          gh release delete artgallery-v2.0 --cleanup-tag -y || true
+          gh release create artgallery-v2.0 ArtGallery-v2.0.apk --title "Art Gallery v2.0" --notes "Advanced hybrid admin dashboard, analytics, categories, backup and sync-ready Android APK"
