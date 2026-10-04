@@ -1,8 +1,13 @@
 package com.saeid.artgallery;
 
+import android.app.Activity;
+import android.app.KeyguardManager;
 import android.content.Intent;
+import android.hardware.biometrics.BiometricPrompt;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.os.Environment;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
@@ -16,17 +21,14 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import androidx.biometric.BiometricPrompt;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.FragmentActivity;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.Executor;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
     private static final int FILE_CHOOSER_REQUEST = 9001;
+    private static final int DEVICE_CREDENTIAL_REQUEST = 9002;
     private WebView webView;
     private ValueCallback<Uri[]> fileCallback;
     private Uri cameraUri;
@@ -84,39 +86,59 @@ public class MainActivity extends FragmentActivity {
         @JavascriptInterface
         public void authenticateBiometric() {
             runOnUiThread(() -> {
-                Executor executor = ContextCompat.getMainExecutor(MainActivity.this);
-                BiometricPrompt prompt = new BiometricPrompt(MainActivity.this, executor,
-                        new BiometricPrompt.AuthenticationCallback() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    try {
+                        BiometricPrompt prompt = new BiometricPrompt.Builder(MainActivity.this)
+                                .setTitle("Rangin Gallery")
+                                .setSubtitle("Authenticate to access protected tools")
+                                .setNegativeButton("Cancel", getMainExecutor(), (dialog, which) -> sendBiometricResult(false))
+                                .build();
+                        CancellationSignal signal = new CancellationSignal();
+                        prompt.authenticate(signal, getMainExecutor(), new BiometricPrompt.AuthenticationCallback() {
                             @Override
                             public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
                                 super.onAuthenticationSucceeded(result);
-                                if (webView != null) webView.evaluateJavascript("window.onBiometricResult && window.onBiometricResult(true)", null);
-                            }
-
-                            @Override
-                            public void onAuthenticationError(int errorCode, CharSequence errString) {
-                                super.onAuthenticationError(errorCode, errString);
-                                if (webView != null) webView.evaluateJavascript("window.onBiometricResult && window.onBiometricResult(false)", null);
+                                sendBiometricResult(true);
                             }
 
                             @Override
                             public void onAuthenticationFailed() {
                                 super.onAuthenticationFailed();
-                                if (webView != null) webView.evaluateJavascript("window.onBiometricResult && window.onBiometricResult(false)", null);
+                                sendBiometricResult(false);
+                            }
+
+                            @Override
+                            public void onAuthenticationError(int errorCode, CharSequence errString) {
+                                super.onAuthenticationError(errorCode, errString);
+                                sendBiometricResult(false);
                             }
                         });
-
-                BiometricPrompt.PromptInfo info = new BiometricPrompt.PromptInfo.Builder()
-                        .setTitle("Rangin Gallery")
-                        .setSubtitle("Authenticate to access protected tools")
-                        .setNegativeButtonText("Cancel")
-                        .build();
-                try {
-                    prompt.authenticate(info);
-                } catch (Exception e) {
-                    if (webView != null) webView.evaluateJavascript("window.onBiometricResult && window.onBiometricResult(false)", null);
+                        return;
+                    } catch (Exception ignored) {}
                 }
+
+                try {
+                    KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+                    if (km != null && km.isKeyguardSecure()) {
+                        Intent intent = km.createConfirmDeviceCredentialIntent(
+                                "Rangin Gallery",
+                                "Confirm device security to access protected tools"
+                        );
+                        if (intent != null) {
+                            startActivityForResult(intent, DEVICE_CREDENTIAL_REQUEST);
+                            return;
+                        }
+                    }
+                } catch (Exception ignored) {}
+                sendBiometricResult(false);
             });
+        }
+    }
+
+    private void sendBiometricResult(boolean ok) {
+        if (webView != null) {
+            final String js = "window.onBiometricResult && window.onBiometricResult(" + (ok ? "true" : "false") + ")";
+            runOnUiThread(() -> webView.evaluateJavascript(js, null));
         }
     }
 
@@ -190,6 +212,12 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == DEVICE_CREDENTIAL_REQUEST) {
+            sendBiometricResult(resultCode == RESULT_OK);
+            return;
+        }
+
         if (requestCode != FILE_CHOOSER_REQUEST || fileCallback == null) return;
 
         Uri[] result = null;
