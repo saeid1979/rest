@@ -1,4 +1,4 @@
-name: Build and Publish Rangin Gallery v4.1 FIXED
+name: Build and Publish Rangin Gallery Studio
 
 on:
   push:
@@ -41,10 +41,10 @@ jobs:
         working-directory: art-gallery-android
         run: gradle --no-daemon assembleDebug
       - name: Prepare APK
-        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk Rangin-Gallery-v4.1-FIXED.apk
+        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk Rangin-Gallery-Studio-v4.1.1-CLEAN.apk
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete rangin-gallery-v4.1-fixed --cleanup-tag -y || true
-          gh release create rangin-gallery-v4.1-fixed Rangin-Gallery-v4.1-FIXED.apk --title "Rangin Gallery v4.1 FIXED" --notes "Stability release on the permanent package app.rangingallery.mobile. Fixes main menu selection and Pro navigation, makes Pro modules visible from dashboard and bottom navigation, stores gallery state and image data in Android internal storage instead of relying on localStorage, migrates prior local data when possible, reduces image size safely, fixes advanced artwork form persistence, and retains v4 professional modules."
+          gh release delete rangin-gallery-studio-v4.1.1 --cleanup-tag -y || true
+          gh release create rangin-gallery-studio-v4.1.1 Rangin-Gallery-Studio-v4.1.1-CLEAN.apk --title "Rangin Gallery Studio v4.1.1 CLEAN" --notes "Conflict-free clean baseline using new package app.rangingallery.studio. Includes v4.1 menu fixes, visible Pro hub, Android-native persistent storage, professional modules, Persian-inspired trilingual UI, certificates, PDF tools, CRM, sales, AI/web integration settings, security and exhibition modes. This package becomes the stable update baseline going forward."
