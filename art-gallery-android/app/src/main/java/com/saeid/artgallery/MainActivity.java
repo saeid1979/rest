@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
 import android.provider.MediaStore;
+import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -23,6 +27,35 @@ public class MainActivity extends Activity {
     private ValueCallback<Uri[]> fileCallback;
     private Uri cameraUri;
 
+    public class AndroidBridge {
+        @JavascriptInterface
+        public void printPage(final String jobName) {
+            runOnUiThread(() -> {
+                if (webView == null) return;
+                PrintManager printManager = (PrintManager) getSystemService(PRINT_SERVICE);
+                if (printManager == null) return;
+                PrintDocumentAdapter adapter = webView.createPrintDocumentAdapter(
+                        (jobName == null || jobName.trim().isEmpty()) ? "Rangin Gallery" : jobName
+                );
+                PrintAttributes attributes = new PrintAttributes.Builder()
+                        .setColorMode(PrintAttributes.COLOR_MODE_COLOR)
+                        .build();
+                printManager.print("Rangin Gallery", adapter, attributes);
+            });
+        }
+
+        @JavascriptInterface
+        public void shareText(final String title, final String text) {
+            runOnUiThread(() -> {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, title == null ? "Rangin Gallery" : title);
+                intent.putExtra(Intent.EXTRA_TEXT, text == null ? "" : text);
+                startActivity(Intent.createChooser(intent, "Rangin Gallery"));
+            });
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +69,8 @@ public class MainActivity extends Activity {
         s.setAllowFileAccess(true);
         s.setAllowContentAccess(true);
         s.setMediaPlaybackRequiresUserGesture(false);
+
+        webView.addJavascriptInterface(new AndroidBridge(), "AndroidBridge");
 
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient() {
@@ -70,7 +105,7 @@ public class MainActivity extends Activity {
 
                 Intent chooser = new Intent(Intent.ACTION_CHOOSER);
                 chooser.putExtra(Intent.EXTRA_INTENT, contentIntent);
-                chooser.putExtra(Intent.EXTRA_TITLE, "انتخاب عکس اثر");
+                chooser.putExtra(Intent.EXTRA_TITLE, "Choose artwork image");
                 if (cameraIntent != null) {
                     chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{cameraIntent});
                 }
