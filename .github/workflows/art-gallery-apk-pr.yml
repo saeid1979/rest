@@ -1,0 +1,36 @@
+name: Build Art Gallery APK
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "art-gallery-android/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+      - name: Build debug APK
+        working-directory: art-gallery-android
+        run: gradle --no-daemon assembleDebug
+      - name: Rename APK
+        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk ArtGallery-v1.0.apk
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ArtGallery-v1.0-APK
+          path: ArtGallery-v1.0.apk
+          if-no-files-found: error
