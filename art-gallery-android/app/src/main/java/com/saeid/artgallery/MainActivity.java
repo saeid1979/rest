@@ -24,7 +24,10 @@ import android.webkit.WebViewClient;
 import androidx.core.content.FileProvider;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends Activity {
     private static final int FILE_CHOOSER_REQUEST = 9001;
@@ -81,6 +84,36 @@ public class MainActivity extends Activity {
                 if (enabled) getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
                 else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
             });
+        }
+
+
+        @JavascriptInterface
+        public void saveData(final String key, final String json) {
+            if (key == null || json == null) return;
+            if (!key.matches("[A-Za-z0-9_-]{1,40}")) return;
+            try (FileOutputStream out = openFileOutput("rangin_" + key + ".json", MODE_PRIVATE)) {
+                out.write(json.getBytes(StandardCharsets.UTF_8));
+                out.flush();
+            } catch (Exception ignored) {}
+        }
+
+        @JavascriptInterface
+        public String loadData(final String key) {
+            if (key == null || !key.matches("[A-Za-z0-9_-]{1,40}")) return "";
+            File file = new File(getFilesDir(), "rangin_" + key + ".json");
+            if (!file.exists()) return "";
+            try (FileInputStream in = new FileInputStream(file)) {
+                byte[] data = new byte[(int) file.length()];
+                int total = 0;
+                while (total < data.length) {
+                    int n = in.read(data, total, data.length - total);
+                    if (n < 0) break;
+                    total += n;
+                }
+                return new String(data, 0, total, StandardCharsets.UTF_8);
+            } catch (Exception ignored) {
+                return "";
+            }
         }
 
         @JavascriptInterface
