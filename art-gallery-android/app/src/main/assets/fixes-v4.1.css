@@ -1,0 +1,10 @@
+/* Rangin Gallery v4.1 stability fixes */
+.nav.v41-nav{grid-template-columns:repeat(6,1fr)}
+.nav .v41-pro{color:#6f5317;background:linear-gradient(180deg,#fff8df,#f1dfaa);border:1px solid #dec477}
+.nav .v41-pro b{color:#9a6c17}
+.v41Hub{background:linear-gradient(135deg,#0c2c5f,#136375);color:white;border:2px solid var(--gold);border-radius:22px;padding:15px;margin:0 0 12px;box-shadow:var(--shadow)}
+.v41Hub h3{margin:0 0 5px;font-family:Georgia,serif}.v41Hub p{font-size:11px;line-height:1.7;opacity:.86;margin:0 0 10px}
+.v41Grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.v41Grid button{border:1px solid #ffffff44;background:#ffffff12;color:white;border-radius:11px;padding:9px 4px;font-size:10px;font-weight:900}
+.v41Storage{display:inline-flex;gap:5px;align-items:center;background:#eaf6ee;color:#275f45;border:1px solid #bee0c9;border-radius:99px;padding:5px 8px;font-size:9px;font-weight:900;margin-top:7px}
+.v41Storage.bad{background:#fff0ce;color:#81540a;border-color:#e7cf94}
+@media(max-width:430px){.nav button{font-size:8px}.nav button b{font-size:16px}.v41Grid{grid-template-columns:repeat(2,1fr)}}

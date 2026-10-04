@@ -1,0 +1,280 @@
+package com.saeid.artgallery;
+
+import android.app.Activity;
+import android.app.KeyguardManager;
+import android.content.Intent;
+import android.hardware.biometrics.BiometricPrompt;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.CancellationSignal;
+import android.os.Environment;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
+import android.provider.MediaStore;
+import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+import androidx.core.content.FileProvider;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+public class MainActivity extends Activity {
+    private static final int FILE_CHOOSER_REQUEST = 9001;
+    private static final int DEVICE_CREDENTIAL_REQUEST = 9002;
+    private WebView webView;
+    private ValueCallback<Uri[]> fileCallback;
+    private Uri cameraUri;
+
+    public class AndroidBridge {
+        @JavascriptInterface
+        public void printPage(final String jobName) {
+            runOnUiThread(() -> {
+                if (webView == null) return;
+                PrintManager printManager = (PrintManager) getSystemService(PRINT_SERVICE);
+                if (printManager == null) return;
+                PrintDocumentAdapter adapter = webView.createPrintDocumentAdapter(
+                        (jobName == null || jobName.trim().isEmpty()) ? "Rangin Gallery" : jobName
+                );
+                PrintAttributes attributes = new PrintAttributes.Builder()
+                        .setColorMode(PrintAttributes.COLOR_MODE_COLOR)
+                        .build();
+                printManager.print(jobName == null ? "Rangin Gallery" : jobName, adapter, attributes);
+            });
+        }
+
+        @JavascriptInterface
+        public void shareText(final String title, final String text) {
+            runOnUiThread(() -> {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, title == null ? "Rangin Gallery" : title);
+                intent.putExtra(Intent.EXTRA_TEXT, text == null ? "" : text);
+                startActivity(Intent.createChooser(intent, "Rangin Gallery"));
+            });
+        }
+
+        @JavascriptInterface
+        public void openExternal(final String url) {
+            if (url == null) return;
+            runOnUiThread(() -> {
+                try {
+                    Uri uri = Uri.parse(url);
+                    String scheme = uri.getScheme();
+                    if (scheme == null) return;
+                    if (!scheme.equals("http") && !scheme.equals("https") && !scheme.equals("mailto") && !scheme.equals("tel")) return;
+                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                } catch (Exception ignored) {}
+            });
+        }
+
+        @JavascriptInterface
+        public void setSecureScreen(final boolean enabled) {
+            runOnUiThread(() -> {
+                if (enabled) getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+                else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+            });
+        }
+
+
+        @JavascriptInterface
+        public void saveData(final String key, final String json) {
+            if (key == null || json == null) return;
+            if (!key.matches("[A-Za-z0-9_-]{1,40}")) return;
+            try (FileOutputStream out = openFileOutput("rangin_" + key + ".json", MODE_PRIVATE)) {
+                out.write(json.getBytes(StandardCharsets.UTF_8));
+                out.flush();
+            } catch (Exception ignored) {}
+        }
+
+        @JavascriptInterface
+        public String loadData(final String key) {
+            if (key == null || !key.matches("[A-Za-z0-9_-]{1,40}")) return "";
+            File file = new File(getFilesDir(), "rangin_" + key + ".json");
+            if (!file.exists()) return "";
+            try (FileInputStream in = new FileInputStream(file)) {
+                byte[] data = new byte[(int) file.length()];
+                int total = 0;
+                while (total < data.length) {
+                    int n = in.read(data, total, data.length - total);
+                    if (n < 0) break;
+                    total += n;
+                }
+                return new String(data, 0, total, StandardCharsets.UTF_8);
+            } catch (Exception ignored) {
+                return "";
+            }
+        }
+
+        @JavascriptInterface
+        public void authenticateBiometric() {
+            runOnUiThread(() -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    try {
+                        BiometricPrompt prompt = new BiometricPrompt.Builder(MainActivity.this)
+                                .setTitle("Rangin Gallery")
+                                .setSubtitle("Authenticate to access protected tools")
+                                .setNegativeButton("Cancel", getMainExecutor(), (dialog, which) -> sendBiometricResult(false))
+                                .build();
+                        CancellationSignal signal = new CancellationSignal();
+                        prompt.authenticate(signal, getMainExecutor(), new BiometricPrompt.AuthenticationCallback() {
+                            @Override
+                            public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                                super.onAuthenticationSucceeded(result);
+                                sendBiometricResult(true);
+                            }
+
+                            @Override
+                            public void onAuthenticationFailed() {
+                                super.onAuthenticationFailed();
+                                sendBiometricResult(false);
+                            }
+
+                            @Override
+                            public void onAuthenticationError(int errorCode, CharSequence errString) {
+                                super.onAuthenticationError(errorCode, errString);
+                                sendBiometricResult(false);
+                            }
+                        });
+                        return;
+                    } catch (Exception ignored) {}
+                }
+
+                try {
+                    KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+                    if (km != null && km.isKeyguardSecure()) {
+                        Intent intent = km.createConfirmDeviceCredentialIntent(
+                                "Rangin Gallery",
+                                "Confirm device security to access protected tools"
+                        );
+                        if (intent != null) {
+                            startActivityForResult(intent, DEVICE_CREDENTIAL_REQUEST);
+                            return;
+                        }
+                    }
+                } catch (Exception ignored) {}
+                sendBiometricResult(false);
+            });
+        }
+    }
+
+    private void sendBiometricResult(boolean ok) {
+        if (webView != null) {
+            final String js = "window.onBiometricResult && window.onBiometricResult(" + (ok ? "true" : "false") + ")";
+            runOnUiThread(() -> webView.evaluateJavascript(js, null));
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        webView = new WebView(this);
+        setContentView(webView);
+
+        WebSettings s = webView.getSettings();
+        s.setJavaScriptEnabled(true);
+        s.setDomStorageEnabled(true);
+        s.setAllowFileAccess(true);
+        s.setAllowContentAccess(true);
+        s.setMediaPlaybackRequiresUserGesture(false);
+
+        webView.addJavascriptInterface(new AndroidBridge(), "AndroidBridge");
+
+        webView.setWebViewClient(new WebViewClient());
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
+                if (fileCallback != null) fileCallback.onReceiveValue(null);
+                fileCallback = callback;
+
+                Intent contentIntent = params.createIntent();
+                String accept = "image/*";
+                if (params.getAcceptTypes() != null && params.getAcceptTypes().length > 0 && params.getAcceptTypes()[0] != null && !params.getAcceptTypes()[0].isEmpty()) {
+                    accept = params.getAcceptTypes()[0];
+                }
+                contentIntent.setType(accept);
+                contentIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+
+                Intent cameraIntent = null;
+                if (accept.startsWith("image") || accept.equals("*/*")) {
+                    cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                        try {
+                            File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                            if (dir != null && !dir.exists()) dir.mkdirs();
+                            File photo = File.createTempFile("art_", ".jpg", dir);
+                            cameraUri = FileProvider.getUriForFile(
+                                    MainActivity.this,
+                                    getPackageName() + ".fileprovider",
+                                    photo
+                            );
+                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri);
+                            cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        } catch (IOException e) {
+                            cameraIntent = null;
+                            cameraUri = null;
+                        }
+                    } else {
+                        cameraIntent = null;
+                    }
+                }
+
+                Intent chooser = new Intent(Intent.ACTION_CHOOSER);
+                chooser.putExtra(Intent.EXTRA_INTENT, contentIntent);
+                chooser.putExtra(Intent.EXTRA_TITLE, "Choose artwork media");
+                if (cameraIntent != null) chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{cameraIntent});
+                startActivityForResult(chooser, FILE_CHOOSER_REQUEST);
+                return true;
+            }
+        });
+
+        webView.loadUrl("file:///android_asset/index.html");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == DEVICE_CREDENTIAL_REQUEST) {
+            sendBiometricResult(resultCode == RESULT_OK);
+            return;
+        }
+
+        if (requestCode != FILE_CHOOSER_REQUEST || fileCallback == null) return;
+
+        Uri[] result = null;
+        if (resultCode == RESULT_OK) {
+            if (data == null) {
+                if (cameraUri != null) result = new Uri[]{cameraUri};
+            } else if (data.getClipData() != null) {
+                int count = data.getClipData().getItemCount();
+                result = new Uri[count];
+                for (int i = 0; i < count; i++) result[i] = data.getClipData().getItemAt(i).getUri();
+            } else if (data.getData() != null) {
+                result = new Uri[]{data.getData()};
+            } else if (cameraUri != null) {
+                result = new Uri[]{cameraUri};
+            }
+        }
+        fileCallback.onReceiveValue(result);
+        fileCallback = null;
+        cameraUri = null;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (webView != null && webView.canGoBack()) webView.goBack();
+        else super.onBackPressed();
+    }
+}

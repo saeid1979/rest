@@ -1,0 +1,26 @@
+
+/* Rangin Gallery Professional Suite v4 */
+.proBtn{border:1px solid #f2d477;background:#ffffff12;color:#fff;border-radius:12px;padding:7px 9px;font-size:11px;font-weight:900}
+.proShell{position:fixed;inset:0;z-index:110;background:var(--ivory);display:none;overflow:auto}.proShell.show{display:block}
+.proHead{position:sticky;top:0;z-index:5;background:linear-gradient(135deg,#081f47,#143a73 58%,#0f6973);color:#fff;border-bottom:3px solid var(--gold);padding:12px}
+.proHeadRow{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.proHead h2{margin:0;font-family:Georgia,serif}.proBody{max-width:1100px;margin:auto;padding:14px 14px 90px}
+.proNav{display:flex;gap:7px;overflow-x:auto;padding:2px 0 11px}.proNav button{white-space:nowrap;border:1px solid #d7c49a;background:#fffaf0;color:var(--lapis2);border-radius:99px;padding:8px 12px;font-size:11px;font-weight:900}.proNav button.on{background:var(--lapis);color:#fff}
+.proSection{display:none}.proSection.on{display:block}.proGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.proCard{background:linear-gradient(165deg,#fffef9,#fbf4e6);border:1px solid var(--line);border-radius:18px;padding:13px;box-shadow:var(--shadow)}
+.proCard h3{margin:0 0 9px;color:var(--lapis);font-size:14px}.proCard p{font-size:11px;color:var(--muted);line-height:1.7}
+.proMetric{font:700 27px Georgia,serif;color:var(--lapis)}.proRow{display:grid;gap:8px;margin-top:8px}.pro2{grid-template-columns:1fr 1fr}.pro3{grid-template-columns:repeat(3,1fr)}
+.proTable{width:100%;border-collapse:collapse;font-size:11px}.proTable td,.proTable th{border-bottom:1px solid #e5d9c0;padding:8px 4px;text-align:start}.proTable th{color:var(--lapis)}
+.proList{display:grid;gap:7px}.proItem{border:1px solid #dfd0b2;background:#fffdf7;border-radius:13px;padding:10px}.proItem b{color:var(--lapis2)}.proItem small{display:block;color:var(--muted);margin-top:3px}
+.proForm{display:grid;gap:8px}.proForm input,.proForm textarea,.proForm select{width:100%;border:1px solid #d8c9aa;border-radius:12px;background:#fffdf8;padding:10px}.proForm textarea{min-height:75px}
+.proTabs{display:flex;gap:5px;flex-wrap:wrap}.proTabs button{border:1px solid #d9c8a4;background:#fffaf0;color:var(--lapis2);border-radius:10px;padding:7px 9px;font-size:10px;font-weight:800}
+.proBadge{display:inline-block;border-radius:99px;background:#eee3ca;color:var(--lapis2);font-size:10px;padding:4px 7px;margin:2px}
+.proWarn{border-inline-start:4px solid var(--gold);background:#fff4d9;padding:9px;border-radius:10px;color:#72541d;font-size:11px;line-height:1.7}
+.proOk{border-inline-start:4px solid var(--green);background:#eaf6ee;padding:9px;border-radius:10px;color:#275f45;font-size:11px}
+.theme-dark{--ivory:#151719;--paper:#1d2023;--ink:#f2eadb;--muted:#aaa39a;--line:#3d3b36}.theme-dark body,.theme-dark{background:#151719!important}.theme-dark .card,.theme-dark .work,.theme-dark .proCard,.theme-dark input,.theme-dark textarea,.theme-dark select{background:#202326!important;color:#f5efe4}
+.theme-turquoise{--lapis:#07596b;--lapis2:#064655;--turq:#13a7a6;--gold:#c7a143}.theme-gold{--lapis:#563b17;--lapis2:#3b2912;--turq:#8f7a45;--gold:#c99a3c}.theme-miniature{--lapis:#143a73;--turq:#159c9b;--gold:#c99a3c;--red:#9c3341}
+.vipMark{position:absolute;top:8px;left:8px;background:linear-gradient(135deg,#2b1d51,#6b4d9a);color:white;border:1px solid #d8c3ff;border-radius:99px;padding:4px 7px;font-size:9px;font-weight:900}
+.watermarkPreview:after{content:"RANGIN GALLERY";position:absolute;inset:auto 7px 8px auto;background:#ffffffaa;color:#222;padding:3px 6px;border-radius:6px;font-size:8px;font-weight:900;letter-spacing:.5px}
+.presentation{position:fixed;inset:0;z-index:140;background:#090b0e;display:none;color:#fff}.presentation.show{display:flex;flex-direction:column}.presImg{flex:1;min-height:0;display:grid;place-items:center}.presImg img{max-width:100%;max-height:78vh;object-fit:contain}.presFoot{padding:12px;text-align:center;background:#000a}.presTitle{font:700 24px Georgia,serif}.presBtns{display:flex;justify-content:center;gap:8px;margin-top:8px}.presBtns button{border:1px solid #ffffff55;background:#ffffff16;color:#fff;border-radius:12px;padding:8px 12px}
+.lockOverlay{position:fixed;inset:0;z-index:160;background:linear-gradient(145deg,#071d43,#0e626c);display:none;align-items:center;justify-content:center;padding:20px}.lockOverlay.show{display:flex}.lockCard{width:min(420px,100%);background:#fffaf0;border:2px solid var(--gold);border-radius:24px;padding:22px;text-align:center}.lockCard h2{color:var(--lapis)}
+.aiBox{background:linear-gradient(145deg,#111f48,#164e65);color:#fff;border-radius:16px;padding:12px}.aiBox textarea,.aiBox input{background:#ffffff12;color:#fff;border-color:#ffffff33}.aiBox input::placeholder,.aiBox textarea::placeholder{color:#ffffff99}
+@media(min-width:760px){.proGrid{grid-template-columns:repeat(3,1fr)}.proGrid.wide{grid-template-columns:repeat(4,1fr)}}

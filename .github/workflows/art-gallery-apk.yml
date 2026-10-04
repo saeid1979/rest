@@ -1,0 +1,50 @@
+name: Build and Publish Rangin Gallery Studio
+
+on:
+  push:
+    branches:
+      - art-gallery-apk-build
+    paths:
+      - "art-gallery-android/**"
+      - ".github/workflows/art-gallery-apk.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Restore stable Rangin signing key
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: rangin-gallery-signing-v2
+      - name: Ensure stable signing key exists
+        run: |
+          mkdir -p "$HOME/.android"
+          if [ ! -f "$HOME/.android/debug.keystore" ]; then
+            keytool -genkeypair -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey -keypass android -dname "CN=Rangin Gallery,O=Rangin Gallery,C=ES" -keyalg RSA -keysize 2048 -validity 10000
+          fi
+      - name: Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+      - name: Build APK
+        working-directory: art-gallery-android
+        run: gradle --no-daemon assembleDebug
+      - name: Prepare APK
+        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk Rangin-Gallery-Studio-v4.1.1-CLEAN.apk
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete rangin-gallery-studio-v4.1.1 --cleanup-tag -y || true
+          gh release create rangin-gallery-studio-v4.1.1 Rangin-Gallery-Studio-v4.1.1-CLEAN.apk --title "Rangin Gallery Studio v4.1.1 CLEAN" --notes "Conflict-free clean baseline using new package app.rangingallery.studio. Includes v4.1 menu fixes, visible Pro hub, Android-native persistent storage, professional modules, Persian-inspired trilingual UI, certificates, PDF tools, CRM, sales, AI/web integration settings, security and exhibition modes. This package becomes the stable update baseline going forward."
