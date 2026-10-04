@@ -1,4 +1,4 @@
-name: Build and Publish Art Gallery APK
+name: Build and Publish Rangin Gallery APK
 
 on:
   push:
@@ -40,11 +40,11 @@ jobs:
         run: gradle --no-daemon assembleDebug
 
       - name: Prepare APK
-        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk ArtGallery-v2.1-STABLE.apk
+        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk Rangin-Gallery-v3.0.apk
 
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete artgallery-v2.1-stable --cleanup-tag -y || true
-          gh release create artgallery-v2.1-stable ArtGallery-v2.1-STABLE.apk --title "Art Gallery v2.1 Stable" --notes "Stable signing baseline. One-time reinstall is required if an older build was signed with a different temporary key. Future versions built from this workflow can update in place."
+          gh release delete rangin-gallery-v3.0 --cleanup-tag -y || true
+          gh release create rangin-gallery-v3.0 Rangin-Gallery-v3.0.apk --title "Rangin Gallery v3.0" --notes "Persian-inspired visual redesign, English app name, and full English/Spanish/Persian interface with first-run language selection. Built on the stable signing baseline for in-place updates."
