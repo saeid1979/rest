@@ -1,4 +1,4 @@
-name: Build and Publish Rangin Gallery Final APK
+name: Build and Publish Rangin Gallery v4.1 FIXED
 
 on:
   push:
@@ -17,41 +17,34 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
-
       - name: Restore stable Rangin signing key
         uses: actions/cache@v4
         with:
           path: ~/.android/debug.keystore
           key: rangin-gallery-signing-v2
-
       - name: Ensure stable signing key exists
         run: |
           mkdir -p "$HOME/.android"
           if [ ! -f "$HOME/.android/debug.keystore" ]; then
-            keytool -genkeypair -v               -keystore "$HOME/.android/debug.keystore"               -storepass android               -alias androiddebugkey               -keypass android               -dname "CN=Rangin Gallery,O=Rangin Gallery,C=ES"               -keyalg RSA               -keysize 2048               -validity 10000
+            keytool -genkeypair -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey -keypass android -dname "CN=Rangin Gallery,O=Rangin Gallery,C=ES" -keyalg RSA -keysize 2048 -validity 10000
           fi
-
       - name: Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.9"
-
-      - name: Build Final APK
+      - name: Build APK
         working-directory: art-gallery-android
         run: gradle --no-daemon assembleDebug
-
       - name: Prepare APK
-        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk Rangin-Gallery-FINAL-v4.0.apk
-
-      - name: Publish final release
+        run: cp art-gallery-android/app/build/outputs/apk/debug/app-debug.apk Rangin-Gallery-v4.1-FIXED.apk
+      - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete rangin-gallery-final-v4.0 --cleanup-tag -y || true
-          gh release create rangin-gallery-final-v4.0 Rangin-Gallery-FINAL-v4.0.apk             --title "Rangin Gallery FINAL v4.0"             --notes "Main production baseline. Persian-inspired trilingual art portfolio and management suite. Includes advanced artwork metadata and multi-image support, collections, multi-artist profiles, exhibition and presentation modes, favorites, inquiries, CRM, sales, invoices, commissions, payment-link configuration, certificates with QR, PDF catalog/portfolio, comments and ratings, newsletter, VIP works, smart search, similar works, AI endpoint integration, online sync configuration, analytics dashboard, security PIN, biometric authentication, screenshot protection, kiosk mode, themes, event calendar/maps, watermarking, backups, and web/admin integration settings. Package ID: app.rangingallery.mobile. Stable signing baseline for future updates."
+          gh release delete rangin-gallery-v4.1-fixed --cleanup-tag -y || true
+          gh release create rangin-gallery-v4.1-fixed Rangin-Gallery-v4.1-FIXED.apk --title "Rangin Gallery v4.1 FIXED" --notes "Stability release on the permanent package app.rangingallery.mobile. Fixes main menu selection and Pro navigation, makes Pro modules visible from dashboard and bottom navigation, stores gallery state and image data in Android internal storage instead of relying on localStorage, migrates prior local data when possible, reduces image size safely, fixes advanced artwork form persistence, and retains v4 professional modules."
